@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title class="text-center">Ship Locations</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="game.css">
+</head>
+
+<body>
+    <div id="app">
+        <h1 class="text-center">Ship Locations!</h1>
+
+        <div class="game-title">
+            <p v-for="player in playerEmail">{{player}} (you)</p>
+            VS
+            <p v-for="opponent in opponentEmail"> {{opponent}}</p>
+        </div>
+        <div class="tables">
+            <div id="tableContainerShip" class="table"></div>
+            <div id="tableContainerSalvo" class="table"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script type="text/javascript" src="game.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</body>
+
+</html>

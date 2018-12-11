@@ -1,0 +1,16 @@
+td {
+    border: 1px solid;
+    width: 50px;
+    height: 50px;
+}
+
+.ship-location {
+    background-color: aqua;
+}
+
+.tables{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
