@@ -1,16 +1,105 @@
-td {
-    border: 1px solid;
-    width: 50px;
-    height: 50px;
+.body-game, .body-games {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background-image: url(images/map2.jpg)
 }
 
 .ship-location {
     background-color: aqua;
 }
 
-.tables{
+.salvo-location {
+    background-color: firebrick;
+}
+
+.tables {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    position: relative;
+    z-index: -1
+}
+
+td {
+    border: 3px solid grey;
+    width: 50px;
+    height: 50px;
+    background-color: white
+}
+
+.game-title {
+    display: flex;
+    justify-content: space-evenly;
+    font-family: 'Bungee', cursive;
+}
+
+h1, .leaderTable-title {
+    font-family: 'Bungee', cursive;
+}
+
+.frame-img {
+    display: flex;
+    position: absolute;
+    height: 120%;
+    width: 71%;
+    margin-left: -9%;
+    margin-top: -9%
+}
+
+.control-img {
+    width: 1150px;
+    margin-bottom: -72%;
+    margin-left: 5%;
+    z-index: 1
+}
+
+#leaderTable {
+    width: 341px;
+    align-self: center;
+    margin-top: -15%;
+    margin-right: 10%
+}
+
+.leader-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.leaderTable-title{
+    margin-top: 10%;
+    margin-right: 10%
+}
+
+.tv-img {
+    display: inline-block;
+    position: absolute;
+    margin-top: 5%;
+}
+
+.notepad-img {
+    width: 20%;
+    display: inline-block;
+    position: absolute;
+    margin-left: -38%;
+    margin-top: 10%
+}
+
+.pen-img {
+    width: 25%;
+    display: inline-block;
+    position: absolute;
+    margin-left: -35%;
+    margin-top: 28%;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-left: -75%;
+    z-index: 1;
+    margin-top: 8%;
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 20pt
+    
 }

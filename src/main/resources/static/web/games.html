@@ -3,14 +3,61 @@
 
 <head>
     <title>Salvo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,100i,400,400i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Reenie+Beanie" rel="stylesheet">
+    <link rel="stylesheet" href="game.css">
 </head>
 
-<body>
+<body class="body-games">
     <div id="app">
-        <h1>Salvo!</h1>
+        <div class="leader-board">
+            <h1 class="leaderTable-title">Leader Board!</h1>
+            <!--<img src="images/old-television.png" alt="Television Image" class="tv-img">-->
+            <img src="images/notepad-trans.png" alt="Notepad Image" class="notepad-img">
+            <img src="images/giftboxpen.png" alt="Pen Image" class="pen-img">
+            <div class="nav-buttons">
+                <a>Create Account</a>
+                <a>Login</a>
+                <a>About us</a>
+            </div>
+
+            <form id="login-form" onsubmit="return false">
+                <label>Name: <input type="text" name="username"></label>
+                <label>Password: <input type="text" name="password"></label>
+                <button onclick="logIn()">Log In</button>
+            </form>
+            
+
+            <!--<div id="leaderTable" class="table table-striped">
+                <table>
+                    <thead class="jumbotron">
+                        <tr>
+                            <th>Name</th>
+                            <th>Total</th>
+                            <th>Won</th>
+                            <th>Tied</th>
+                            <th>Lost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="all in allInfo">
+                            <td>{{all.email}}</td>
+                            <td>{{all.total}}</td>
+                            <td>{{all.wins}}</td>
+                            <td>{{all.ties}}</td>
+                            <td>{{all.lost}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>-->
+        </div>
 
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script type="text/javascript" src="games.js"></script>

@@ -72,7 +72,6 @@ public class Game {
         this.gamePlayers = gamePlayers;
     }
 
-
     public Set<Score> getScores() {
         return scores;
     }

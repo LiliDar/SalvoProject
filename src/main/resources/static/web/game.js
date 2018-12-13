@@ -4,21 +4,30 @@ var app = new Vue({
 
     data: {
         id: location.search.split("=")[1],
-        userShips: [],
-        userSalvos: [],
-        opponentSalvos: [],
-        columnHeaders: ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        columnHeaders: ["","1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
         rowHeaders: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
+        
         gamePlayers: [],
         userInfo: [],
         playerEmail: [],
         opponentEmail: [],
-        shipTable: "#tableContainerShip",
-        salvoTable: "#tableContainerSalvo",
-        shipGrid: "U",
-        salvoGrid: "Y",
-        placeShip: "#U",
-        placeSalvo: "#Y",
+        
+        userShips: [],
+        userSalvos: [],
+        enemySalvos: [],
+        
+        userGrid: "U",
+        opponentGrid: "Y",
+        
+        placeUserSalvo: "#U",
+        placeOpponentSalvo: "#Y",
+        
+        userTables:"userTable",
+        userHeader: "userTable-headers",
+        userRow: "userTable-rows",
+        opponentTable: "oponentTable",
+        opponentHeader: "oponentTable-headers",
+        opponentRow: "oponentTable-rows",
     },
 
     created: function () {
@@ -37,16 +46,22 @@ var app = new Vue({
                     console.log(json);
                     data = json;
 
-                    app.userShips = data.userShips;
-                    app.userSalvos = data.userSalvos;
+                    
                     app.gamePlayers = data.game.gamePlayer;
                     app.userInfo = data.userInfo.player;
-                    
-                    app.createTable(app.shipTable, app.shipGrid);
-                    app.createTable(app.salvoTable, app.salvoGrid);
-                    app.printShips(app.userShips, app.placeShip);
-                    app.printShips(app.userSalvos, app.placeSalvo);
                     app.getPlayers();
+                
+                    app.userShips = data.userShips;
+                    app.userSalvos = data.userSalvos;
+                    app.enemySalvos = data.enemySalvos;
+                
+                    app.gameTable(app.userTables, app.userHeader, app.userRow, app.userGrid);
+                    app.gameTable(app.opponentTables, app.opponentHeader, app.opponentRow, app.opponentGrid);
+                    
+                    app.printShips();
+                    app.printSalvos(app.userSalvos, app.placeOpponentSalvo);
+                    app.printSalvos(app.enemySalvos, app.placeUserSalvo);
+
                 })
         },
 
@@ -54,19 +69,19 @@ var app = new Vue({
             let playerInf = [];
             let player = [];
             let opponent = [];
-           
+
             let gamePlayer = this.gamePlayers;
             let user = this.userInfo;
 
             for (i = 0; i < gamePlayer.length; i++) {
                 let players = gamePlayer[i].player;
                 playerInf.push(players);
-                }
+            }
 
             for (i = 0; i < playerInf.length; i++) {
                 if (playerInf[i].id === this.userInfo.id) {
                     player.push(this.userInfo.email)
-                    
+
                 } else {
                     opponent.push(playerInf[i].email);
                 }
@@ -75,41 +90,65 @@ var app = new Vue({
             this.opponentEmail = opponent;
         },
 
-        createTable(table,grid) {
-            function generateGrid(tableId, columnHeaders, rowHeaders) {
+        gameTable(table, header, row, grid) {
+            
+            var rowHead = this.rowHeaders;
+            var columnHead = this.columnHeaders;
 
-                let rows = rowHeaders.length;
-                let cols = columnHeaders.length;
-                var grid = "<table>";
-                for (row = 0; row <= rows; row++) {
-                    grid += "<tr>";
-                    var indexRow = $("tr").index(this) + row + 2;
-                    for (col = 0; col < cols; col++) {
-                        var indexColumn = $("td").index(this) + col + 2;
-                        if (indexRow == 1) {
-                            grid += "<td class='myColumnHeaders'>" + columnHeaders[col] + "</td>";
-                        } else if (indexColumn == 1) {
-                            grid += "<td class='myRowHeaders'>" + rowHeaders[row - 1] + "</td>"
-                        } else {
-                            grid += "<td class='emptyCells' id=" + tableId + rowHeaders[row - 1] + columnHeaders[col] + ">" + rowHeaders[row - 1] + columnHeaders[col] + "</td>";
-                        }
-                    }
-                    grid += "</tr>";
+            var table = document.getElementById(table);
+            var theader = document.getElementById(header);
+            var tbody = document.getElementById(row);
 
-                }
-                return grid;
+            var tRow0 = document.createElement("tr");
+            var td0 = document.createElement("td");
+            tRow0.appendChild(td0);
+
+            for (var i = 0; i < 10; i++) {
+                var tdNumbers = document.createElement("td");
+                tdNumbers.innerHTML = i + 1;
+
+                tRow0.appendChild(tdNumbers);
             }
-            $(table).append(generateGrid(grid, app.columnHeaders, app.rowHeaders));
+            theader.appendChild(tRow0);
+
+            for (var j = 0; j < 10; j++) {
+                var rows = document.createElement("tr");
+                var tdLetters = document.createElement("td");
+                tdLetters.innerHTML = String.fromCharCode(65 + j);
+
+                rows.append(tdLetters);
+                tbody.append(rows);
+
+                for (var k = 0; k < 10; k++) {
+                    var tdBoard = document.createElement("td");
+                    tdBoard.id = grid + rowHead[j] + columnHead[k];
+
+                    rows.append(tdBoard);
+                }
+            }
         },
 
-        printShips(ships, grid) {
-            for (var i = 0; i < ships.length; i++) {
-                let shipLocations = ships[i].locations;
-                let shipType = ships[i].type;
+        printShips() {
+            for (var i = 0; i < app.userShips.length; i++) {
+                let shipLocations = app.userShips[i].locations;
+                let shipType = app.userShips[i].type;
                 for (var j = 0; j < shipLocations.length; j++) {
                     let location = shipLocations[j];
                     if (location != null) {
-                        $(grid + location).addClass('ship-location ' + shipType);
+                        $("#U" + location).addClass('ship-location ' + shipType);
+                    }
+                }
+            }
+        },
+        
+        printSalvos(salvo,grid) {
+            for (var i = 0; i < salvo.length; i++) {
+                let salvoLocations = salvo[i].locations;
+                console.log(salvoLocations)
+                for (var j = 0; j < salvoLocations.length; j++) {
+                    let location = salvoLocations[j];
+                    if (location != null) {
+                        $(grid + location).addClass('salvo-location');
                     }
                 }
             }

@@ -3,12 +3,8 @@ var app = new Vue({
     el: '#app',
 
     data: {
-        allGames: [],
-        creationDate: {},
-        gamePlayer: {},
-        gameID: {},
-
-
+        allData: [],
+        allInfo: [],
     },
 
     created: function () {
@@ -20,7 +16,7 @@ var app = new Vue({
 
         getGamesData() {
 
-            fetch("/api/games")
+            fetch("/api/leader-board")
                 .then(function (response) {
                     return response.json()
                 })
@@ -28,80 +24,57 @@ var app = new Vue({
                     console.log(json);
                     data = json;
 
-                    /*app.renderList(data);*/
-                    app.allGames = data;
+                    app.allData = data;
 
-                    /*app.getCorrectDate();*/
-                    app.getGameData();
+                    app.getData();
+                    app.logIn();
                    
+
+
                 })
         },
 
-        getGameData() {
-
-            for (i = 0; i < app.allGames.length; i++) {
-                
-                app.creationDate = new Date(app.allGames[i].creationDate).toLocaleString();
-                
-                
-                app.gameID = app.allGames[i].id;
-               
-                
-                app.gamePlayer = app.allGames[i].gamePlayers;
-                
+        getData() {
+            let container_one = [];
+            for (let i = 0; i < app.allData.length; i++) {
+                container_one.push(app.allData[i])
             }
+            this.allInfo = container_one;
         },
 
-      
+        logIn() {
 
-
-
-
-
-
-
-
-        /*getCorrectDate(){
-            var date = [];
-            var player = [];
-            var id = [];
-            for(var i = 0; i < this.allGames.length; i++) {
-                var correctDate = this.allGames[i].creationDate;
-                date.push(new Date(correctDate).toLocaleString());
-                
-                var gamePlayers = this.allGames[i].gamePlayers;
-                player.push(gamePlayers)
-                
-                var gameID = this.allGames[i].id;
-                id.push(gameID)
-            }
-            this.creationDate = date;
-            console.log(this.creationDate)
-            
-            this.gamePlayer = player;
-            console.log(this.gamePlayer)
-            
-            this.gameID = id;
-            console.log(this.gameID)
-        },*/
-
-
-
-
-
-
-
-        /*getListHtml(data) {
-            return data.map(getItemHtml => getItemHtml.creationDate);
+            fetch("/api/login", {
+                    credentials: 'include',
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'email=j.bauer@ctu.gov&password=123',
+                })
+                .then(r => {
+                    if (r.status == 200)
+                        console.log(r)
+                })
+                .catch(e => console.log(e))
         },
 
-        renderList(data) {
-            this.getListHtml(data).forEach(e => {
+        logOut() {
 
-                var li = document.createElement("li");
-                li.innerHTML = e
-                document.getElementById("list").append(li)
-            });
-        },*/
+            fetch("/api/logout", {
+                    credentials: 'include',
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                })
+                .then(r => {
+                    if (r.status == 200)
+                        console.log(r)
+                })
+                .catch(e => console.log(e))
+        }
     }
 })

@@ -21,6 +21,7 @@ public class Player {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
     private String email;
+    private String password;
 
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
@@ -40,8 +41,9 @@ public class Player {
 
     public Player() { }
 
-    public Player(String email) {
+    public Player(String email, String password) {
         this.email = email;
+        this.password = password;
     }
 
     public String getEmail() {
@@ -84,5 +86,14 @@ public class Player {
 
     public void setScores(Set<Score> scores) {
         this.scores = scores;
+    }
+
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
