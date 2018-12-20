@@ -5,36 +5,69 @@
     <title>Salvo</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,100i,400,400i,700,700i" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Reenie+Beanie" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800|Poppins:300,400,500,600,700,900|Source+Sans+Pro:300,400,600,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="game.css">
 </head>
 
 <body class="body-games">
     <div id="app">
-        <div class="leader-board">
-            <h1 class="leaderTable-title">Leader Board!</h1>
+
+        <div v-if="leaderTable" class="leader-board">
+
             <!--<img src="images/old-television.png" alt="Television Image" class="tv-img">-->
             <img src="images/notepad-trans.png" alt="Notepad Image" class="notepad-img">
             <img src="images/giftboxpen.png" alt="Pen Image" class="pen-img">
             <div class="nav-buttons">
-                <a>Create Account</a>
-                <a>Login</a>
+                <a v-if="appear" href="#" data-target="#signUp" data-toggle="modal">Sign Up</a>
+                <a v-if="appear" href="#" data-target="#game" data-toggle="modal">Game</a>
+                <a v-if="appear" href="#" data-target="#login" data-toggle="modal">Login</a>
                 <a>About us</a>
+                <button v-if="show" @click="findGames()">Go to Game</button>
+                <a v-if="show" @click="logOut()">Log out</a>
             </div>
 
-            <form id="login-form" onsubmit="return false">
-                <label>Name: <input type="text" name="username"></label>
-                <label>Password: <input type="text" name="password"></label>
-                <button onclick="logIn()">Log In</button>
-            </form>
-            
+            <!--<div id="login" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="login-form">
+                        <div class="modal-body">
+                            <button data-dismiss="modal" class="close">&times;</button>
+                            <h4>Login to you Account</h4>
+                            <div>Name: <input class="username form-control" id="username" type="text" name="username"></div>
+                            <div>Password: <input class="username form-control" id="password" type="text" name="password"></div>
+                            <button @click="logIn()">Log In</button>
+                            <button @click="signUp()">Sign Up</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <!--<div id="leaderTable" class="table table-striped">
+            <div id="signUp" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="login-form">
+                        <div class="modal-body">
+                            <button data-dismiss="modal" class="close">&times;</button>
+                            <h4>Login to you Account</h4>
+                            <div>Name: <input class="username form-control" id="username" type="text" name="username"></div>
+                            <div>Password: <input class="username form-control" id="password" type="text" name="password"></div>
+                            <button @click="signUp()">Sign Up</button>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+
+            <div id="leaderTable" class="table table-striped">
                 <table>
                     <thead class="jumbotron">
+                        <tr>
+                            <th>
+                                <h1 class="leaderTable-title">Leader Board!</h1>
+                            </th>
+                        </tr>
                         <tr>
                             <th>Name</th>
                             <th>Total</th>
@@ -53,11 +86,79 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>-->
+            </div>
+
+
+
+            <table>
+                <tr v-for="game in gameData">
+                    <td v-if="game.gamePlayer[0]">{{game.gamePlayer[0].email}}</td>
+                    <td v-if="game.gamePlayer[1]">{{game.gamePlayer[1].email}}</td>
+                    <td v-if="game.gamePlayer[0]">
+                        <a v-if="game.gamePlayer[0].email == user.email" :href="'/web/game.html?gp='+ game.gamePlayer[0].id">Back</a>
+                    </td>
+                    <td v-if="game.gamePlayer[1]">
+                        <a v-if="game.gamePlayer[1].email == user.email" :href="'/web/game.html?gp='+ game.gamePlayer[1].id">Back</a>
+                    </td>
+                </tr>
+            </table>
         </div>
+        
+        
+
+
+
+
+
+        <div v-if="form" class="container">
+            <div class="row">
+                <div class="left">
+                    <div class="indicator login">Login</div>
+                </div>
+                <div class="right">
+                    <div class="indicator signup">Sign Up</div>
+                </div>
+            </div>
+            <div class="slider">
+                <form action="" class="loginForm">
+                    <div class="input_container">
+                        <div class="formHeading">Login</div>
+                        <input type="text" class="inputs" id="luserName" placeholder="User Name">
+                        <div class="lUserNameDetail details"></div>
+                        <input type="password" class="inputs" id="lpassword" placeholder="Password">
+                        <div class="lPasswordDetail details"></div>
+                        <input type="submit" class="sub" @click="logIn()">
+                    </div>
+                </form>
+                <form action="" class="signUpForm">
+                    <div class="input_container">
+                        <div class="formHeading">SignUp</div>
+                        <input type="text" class="inputs" placeholder="User Name" id="suserName">
+                        <div class="sUserNameDetails details"></div>
+                        <input type="text" class="inputs" placeholder="Email" id="email">
+                        <div class="sEmailDetails details"></div>
+                        <input type="password" class="inputs" placeholder="Password" id="spassword">
+                        <div class="sPasswordDetails details"></div>
+                        <input type="submit" class="sub" value="SignUp">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
 
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script type="text/javascript" src="games.js"></script>

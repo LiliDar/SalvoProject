@@ -4,25 +4,25 @@ var app = new Vue({
 
     data: {
         id: location.search.split("=")[1],
-        columnHeaders: ["","1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        columnHeaders: ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
         rowHeaders: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
-        
+
         gamePlayers: [],
         userInfo: [],
         playerEmail: [],
         opponentEmail: [],
-        
+
         userShips: [],
         userSalvos: [],
         enemySalvos: [],
-        
+
         userGrid: "U",
         opponentGrid: "Y",
-        
+
         placeUserSalvo: "#U",
         placeOpponentSalvo: "#Y",
-        
-        userTables:"userTable",
+
+        userTables: "userTable",
         userHeader: "userTable-headers",
         userRow: "userTable-rows",
         opponentTable: "oponentTable",
@@ -46,26 +46,57 @@ var app = new Vue({
                     console.log(json);
                     data = json;
 
-                    
                     app.gamePlayers = data.game.gamePlayer;
-                    app.userInfo = data.userInfo.player;
+                    app.userInfo = data.userInfo;
                     app.getPlayers();
-                
+
                     app.userShips = data.userShips;
                     app.userSalvos = data.userSalvos;
                     app.enemySalvos = data.enemySalvos;
-                
+
                     app.gameTable(app.userTables, app.userHeader, app.userRow, app.userGrid);
                     app.gameTable(app.opponentTables, app.opponentHeader, app.opponentRow, app.opponentGrid);
-                    
-                    app.printShips();
+
                     app.printSalvos(app.userSalvos, app.placeOpponentSalvo);
                     app.printSalvos(app.enemySalvos, app.placeUserSalvo);
-
+                    app.printShips();
                 })
-        },
 
+        },
+        
         getPlayers() {
+            let playerInfo = [];
+            let idInfo = [];
+            let player = [];
+            let opponent = [];
+
+            let gamePlayer = this.gamePlayers;
+            let user = this.userInfo;
+
+            for (i = 0; i < gamePlayer.length; i++) {
+                playerInfo.push(gamePlayer[i].email)
+                idInfo.push(gamePlayer[i].playerId);
+                
+                console.log(gamePlayer[i].email)
+                console.log(gamePlayer[i].id)
+                console.log(gamePlayer[i].playerId)
+                
+                
+                if (idInfo == user.playerId) {
+                    player.push(user.email)
+
+                } else {
+                    opponent.push(playerInfo[1]);
+                } 
+            }
+            console.log(player)
+            this.playerEmail = player;
+            console.log(opponent)
+            this.opponentEmail = opponent
+        },
+        
+
+        /*getPlayers() {
             let playerInf = [];
             let player = [];
             let opponent = [];
@@ -88,10 +119,10 @@ var app = new Vue({
             }
             this.playerEmail = player;
             this.opponentEmail = opponent;
-        },
+        },*/
 
         gameTable(table, header, row, grid) {
-            
+
             var rowHead = this.rowHeaders;
             var columnHead = this.columnHeaders;
 
@@ -140,8 +171,7 @@ var app = new Vue({
                 }
             }
         },
-        
-        printSalvos(salvo,grid) {
+        printSalvos(salvo, grid) {
             for (var i = 0; i < salvo.length; i++) {
                 let salvoLocations = salvo[i].locations;
                 console.log(salvoLocations)
@@ -152,6 +182,25 @@ var app = new Vue({
                     }
                 }
             }
+        },
+        
+        logOut() {
+
+            fetch("/api/logout", {
+                    credentials: 'include',
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                })
+                .then(r => {
+                    if (r.status == 200)
+                        console.log(r)
+                
+                    app.show = false;
+                })
+                .catch(e => console.log(e))
         },
     },
 })
