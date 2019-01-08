@@ -16,60 +16,74 @@
 
 <body class="body-games">
     <div id="app">
-
         <div>
-            <div>
+            <div v-if="show">
                 <a @click="logOut()">Log out</a>
+            </div>
+            <div v-if="appear">
+                <a href="#close" title="Close" class="close">X</a>
+                <label for="btn" class="label">Log in</label>
+                <input type="checkbox" id="btn" />
+                <div class="overlay">
+                    <div class="popup">
+                        <span class="title">Log in</span>
+                        <input id="username" placeholder="Username" />
+                        <input id="password" placeholder="Password" type="password" />
+                        <label @click="logIn()" for="btn" class="login">Log in</label>
+                    </div>
+                </div>
+            </div>
+            <div v-if="show" class="gameTable">
+                <label for="btn" class="label">Game</label>
+                <input type="checkbox" id="btn" />
+                <div class="overlay">
+                    <div class="popup">
+                        <table>
+                            <tr v-for="game in gameData" v-if="gameData.length != 0">
+                                <td v-if="game.gamePlayers[0]">{{game.gamePlayers[0].player.email}}</td>
+                                <td v-if="game.gamePlayers[1]">{{game.gamePlayers[1].player.email}}</td>
+                                <td v-if="game.gamePlayers[0]">
+                                    <a v-if="game.gamePlayers[0].player.email == user.email" :href="'/web/game.html?gp='+ game.gamePlayers[0].id">Back</a>
+                                </td>
+                                <td v-if="game.gamePlayers[1]">
+                                    <a v-if="game.gamePlayers[1].player.email == user.email" :href="'/web/game.html?gp='+ game.gamePlayers[1].id">Back</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
 
-        <!--<div id="leaderTable" class="table table-striped">
-                <table>
-                    <thead class="jumbotron">
-                        <tr>
-                            <th>
-                                <h1>Leader Board!</h1>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>Name</th>
-                            <th>Total</th>
-                            <th>Won</th>
-                            <th>Tied</th>
-                            <th>Lost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="all in allInfo">
-                            <td>{{all.email}}</td>
-                            <td>{{all.total}}</td>
-                            <td>{{all.wins}}</td>
-                            <td>{{all.ties}}</td>
-                            <td>{{all.lost}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>-->
-
-
-        <table v-if="show">
-            <tr v-for="game in gameData">
-                <td v-if="game.gamePlayer[0]">{{game.gamePlayer[0].email}}</td>
-                <td v-if="game.gamePlayer[1]">{{game.gamePlayer[1].email}}</td>
-                <td v-if="game.gamePlayer[0]">
-                    <a v-if="game.gamePlayer[0].email == user.email" :href="'/web/game.html?gp='+ game.gamePlayer[0].id">Back</a>
-                </td>
-                <td v-if="game.gamePlayer[1]">
-                    <a v-if="game.gamePlayer[1].email == user.email" :href="'/web/game.html?gp='+ game.gamePlayer[1].id">Back</a>
-                </td>
-            </tr>
-        </table>
+        <div v-if="seen" id="leaderTable" class="leaderTable table table-striped">
+            <table>
+                <thead class="jumbotron">
+                    <tr class="header">
+                        <th>Name</th>
+                        <th>Total</th>
+                        <th>Won</th>
+                        <th>Tied</th>
+                        <th>Lost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="tableData" v-for="all in allInfo">
+                        <td>{{all.email}}</td>
+                        <td>{{all.total}}</td>
+                        <td>{{all.wins}}</td>
+                        <td>{{all.ties}}</td>
+                        <td>{{all.lost}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
 
 
 
-        <div v-if="appear" class="login-wrapper">
+
+        <!--<div v-if="appear" class="login-wrapper">
             <div class="login-left">
                 <img src="images/giphy.gif">
                 <div class="h1">Enter the Game</div>
@@ -89,7 +103,7 @@
                     <button class="btn btn-primary" @click="signUp()">Sign Up</button>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 
 

@@ -7,12 +7,13 @@ var app = new Vue({
         allInfo: [],
         show: false,
         appear: true,
-        gameData: [],
+        seen: true,
+        gameData: [{
+            gamePlayer: []
+        }],
         gamePlayer: [],
-        info: [],
         user: {},
-        form: true,
-        leaderTable: false,
+        isLogged: false,
 
 
     },
@@ -38,7 +39,7 @@ var app = new Vue({
                     console.log(app.allData)
                     app.getData();
                     app.findGames();
-                    app.modal()
+                    /*app.modal()*/
 
                 })
         },
@@ -72,10 +73,12 @@ var app = new Vue({
                     if (r.status == 200)
                         console.log(r)
 
+                    app.isLogged = true;
+
                     app.appear = false;
-                    app.show = true;
-                    app.form = false;
-                    app.leaderTable = true;
+                    app.show = true
+
+
                 })
                 .catch(e => console.log(e))
         },
@@ -94,10 +97,10 @@ var app = new Vue({
                     if (r.status == 200)
                         console.log(r)
 
-                    app.show = false;
+                    app.isLogged = false;
                     app.appear = true;
-                    app.form = true;
-                    app.leaderTable = false;
+                    app.show = false;
+
 
                 })
                 .catch(e => console.log(e))
@@ -137,22 +140,25 @@ var app = new Vue({
                     console.log(json)
                     data = json;
 
-                    app.gameData = data;
+                    app.gameData = data.games;
+                    if (data.currentPlayer) {
+                        app.isLogged = true;
+                        app.appear = false;
+                        app.show = true
+                    }
+                    console.log(app.gameData)
                     app.getGame();
                 })
         },
 
 
         getGame() {
-            let game = app.gameData;
+            let game = this.gameData;
 
             for (let i = 0; i < game.length; i++) {
+                console.log(game[i].gamePlayers)
                 this.gamePlayer.push(game[i].gamePlayer)
             }
-            for (let i = 0; i < this.gamePlayer.length; i++) {
-
-            }
-
         },
 
         getUser() {
@@ -166,16 +172,47 @@ var app = new Vue({
                 })
                 .then(r => r.json().then(e => app.user = e.succed[0]))
                 .catch(e => console.log(e))
-        },
 
-        modal() {
+        },
+        
+        findGames() {
+            fetch("/api/games", {
+                    credentials: 'include',
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                })
+                .then(function (response) {
+                    return response.json()
+                })
+                .then(function (json) {
+                    console.log(json)
+                    data = json;
+
+                    app.gameData = data.games;
+                    if (data.currentPlayer) {
+                        app.isLogged = true;
+                        app.appear = false;
+                        app.show = true
+                    }
+                    console.log(app.gameData)
+                    app.getGame();
+                })
+        },
+        
+        
+        
+
+        /*modal() {
             var openLoginRight = document.querySelector('.h1');
             var loginWrapper = document.querySelector('.login-wrapper');
 
             openLoginRight.addEventListener('click', function () {
                 loginWrapper.classList.toggle('open');
             });
-        },
+        },*/
 
 
 
