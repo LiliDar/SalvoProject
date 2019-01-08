@@ -35,6 +35,21 @@ public class SalvoController {
                 .map(game -> makeGameDTO(game)).collect(Collectors.toList());
     }
 
+    @RequestMapping(path = "/games", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> createNewGame(Authentication authentication) {
+        Player user = playerRepository.findByEmail(authentication.getName());
+        if(authentication == null){
+            return new ResponseEntity<>(makeMap("error", "No logged in player to create game")
+                    , HttpStatus.UNAUTHORIZED);
+        }else{
+            Game game = gameRepository.save(new Game());
+            GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(game, user(authentication));
+
+            return new ResponseEntity<>(makeMap("gamePlayerCreated", gamePlayer.getId())
+                    , HttpStatus.CREATED);
+        }
+    }
+
     @RequestMapping(path = "/players", method = RequestMethod.GET)
     public ResponseEntity<Map<String,Object>> getPlayer(Authentication authentication) {
         if (authentication != null){
@@ -42,7 +57,6 @@ public class SalvoController {
         } else {
             return new ResponseEntity<Map<String, Object>>(makeMap("error","log in"), HttpStatus.UNAUTHORIZED);
         }
-
     }
 
     @RequestMapping(path = "/players", method = RequestMethod.POST)
