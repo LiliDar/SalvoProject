@@ -83,13 +83,13 @@ th {
     font-size: 60px;
 }
 
-table {
+/*table {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-}
+}*/
 
 .leader-board {
     display: flex;
@@ -316,13 +316,6 @@ input:checked + .overlay {
     display: none;
 }
 
-img {
-    border-radius: 50%;
-    float: right;
-    margin: 8px 8px 0 0;
-    border: 2px solid #d9d9d9;
-}
-
 .info {
     width: 70%;
     box-sizing: border-box;
@@ -374,23 +367,17 @@ img {
 }
 
 .close {
-	background: #606061;
-	color: #FFFFFF;
-	line-height: 25px;
-	position: absolute;
-	right: -12px;
-	text-align: center;
-	top: -10px;
-	width: 24px;
-	text-decoration: none;
-	font-weight: bold;
-	-webkit-border-radius: 12px;
-	-moz-border-radius: 12px;
-	border-radius: 12px;
-  .box-shadow;
-  .transition;
-  .transition-delay(.2s);
-  &:hover { background: #00d9ff; .transition; }
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 

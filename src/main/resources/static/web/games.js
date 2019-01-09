@@ -8,9 +8,8 @@ var app = new Vue({
         show: false,
         appear: true,
         seen: true,
-        gameData: [{
-            gamePlayer: []
-        }],
+        gameData: [],
+        currentPlayer: [],
         gamePlayer: [],
         user: {},
         isLogged: false,
@@ -39,8 +38,6 @@ var app = new Vue({
                     console.log(app.allData)
                     app.getData();
                     app.findGames();
-                    /*app.modal()*/
-
                 })
         },
 
@@ -73,12 +70,11 @@ var app = new Vue({
                     if (r.status == 200)
                         console.log(r)
 
+                    swal("Success!", "You Logged In Successfully")
+                    location.reload();
                     app.isLogged = true;
-
                     app.appear = false;
                     app.show = true
-
-
                 })
                 .catch(e => console.log(e))
         },
@@ -97,6 +93,7 @@ var app = new Vue({
                     if (r.status == 200)
                         console.log(r)
 
+                    location.reload();
                     app.isLogged = false;
                     app.appear = true;
                     app.show = false;
@@ -141,24 +138,13 @@ var app = new Vue({
                     data = json;
 
                     app.gameData = data.games;
+                    app.currentPlayer = data.currentPlayer[0];
                     if (data.currentPlayer) {
                         app.isLogged = true;
                         app.appear = false;
                         app.show = true
                     }
-                    console.log(app.gameData)
-                    app.getGame();
                 })
-        },
-
-
-        getGame() {
-            let game = this.gameData;
-
-            for (let i = 0; i < game.length; i++) {
-                console.log(game[i].gamePlayers)
-                this.gamePlayer.push(game[i].gamePlayer)
-            }
         },
 
         getUser() {
@@ -174,36 +160,37 @@ var app = new Vue({
                 .catch(e => console.log(e))
 
         },
-        
-        findGames() {
+
+        createGame() {
+
             fetch("/api/games", {
                     credentials: 'include',
-                    method: 'GET',
+                    method: 'POST',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                 })
-                .then(function (response) {
-                    return response.json()
-                })
-                .then(function (json) {
-                    console.log(json)
-                    data = json;
-
-                    app.gameData = data.games;
-                    if (data.currentPlayer) {
-                        app.isLogged = true;
-                        app.appear = false;
-                        app.show = true
-                    }
-                    console.log(app.gameData)
-                    app.getGame();
-                })
+                .then(r => r.json())
+                .then(r => location.replace('/web/game.html?gp=' + r.newGamePlayer))
+                .catch(e => console.log(e))
         },
         
-        
-        
+        joinGame() {
+            fetch('/api/game/' + id +'/players', {
+                    credentials: 'include',
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                })
+                .then(r => r.json())
+                .then(r => location.replace('/web/game.html?gp=' + r.newGamePlayer))
+                .catch(e => console.log(e))
+        }
+
+
 
         /*modal() {
             var openLoginRight = document.querySelector('.h1');
@@ -213,6 +200,7 @@ var app = new Vue({
                 loginWrapper.classList.toggle('open');
             });
         },*/
+
 
 
 
