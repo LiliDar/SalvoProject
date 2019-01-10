@@ -232,6 +232,7 @@ var app = new Vue({
                     slider.css("transition", "all .3s cubic-bezier(.87,.32,.79,.6)");
                     slider.css('margin-left', sliderMargin + "rem");
                     slider.css("height", "34rem");
+                    slider.css("border-style", "solid");
                     login.slideUp();
                     signup.slideDown();
                 });
@@ -243,7 +244,10 @@ var app = new Vue({
                     signup.slideUp()
                     login.slideDown();
                     slider.css("height", "34rem");
-                    $("input").css('margin', '2.5rem 0');
+                    slider.css("border-style", "solid");
+                    slider.css("overflow", "scroll");
+                    slider.css("border-right-width", "5px");
+                    slider.css("border-top-width", "5px");
                 });
              });
         },

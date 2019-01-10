@@ -624,3 +624,11 @@ font-family: 'Montserrat', sans-serif;
     z-index: 1
     
 }
+
+.loginForm{
+    width: 350px;
+    height: 340px;
+    border-style: solid;
+    overflow: scroll;
+    top: 1%;
+}

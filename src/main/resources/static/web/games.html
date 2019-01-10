@@ -20,7 +20,7 @@
         <div v-if="appear" class="body">
             <div v-if="appear" class="login-wrapper">
                 <div class="login-left">
-                    <img class="img" src="images/giphy.gif">
+                    <img class="img" src="images/gif-bomb3.gif">
                     <div class="h1">Enter the Game</div>
                 </div>
                 <div class="login-right">
@@ -41,85 +41,13 @@
             </div>
         </div>
 
-
-
-        <!--<div>
-            <div v-if="show">
-                <a @click="logOut()">Log out</a>
-            </div>
-            <div v-if="show" class="gameTable">
-                <label for="btn" class="label">Your Games</label>
-                <input class="input2" type="checkbox" id="btn" />
-                <div class="overlay">
-                    <div class="popup">
-                        <table>
-                            <tr v-for="game in gameData" v-if="gameData.length != 0">
-                                <td v-if="game.gamePlayers[0]">{{game.gamePlayers[0].player.email}}</td>
-                                <td v-if="game.gamePlayers[1]">{{game.gamePlayers[1].player.email}}</td>
-                                <td v-if="game.gamePlayers[0]">
-                                    <a v-if="game.gamePlayers[0].player.email == user.email" :href="'/web/game.html?gp='+ game.gamePlayers[0].id">Return</a>
-                                </td>
-                                <td v-if="game.gamePlayers[1]">
-                                    <a v-if="game.gamePlayers[1].player.email == user.email" :href="'/web/game.html?gp='+ game.gamePlayers[1].id">Return</a>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div>
-                    <a @click="createGame()">Create a game!</a>
-                </div>
-                <div v-if="show" class="gameTable">
-                    <label for="btn" class="label">Join a game!</label>
-                    <input class="input2" type="checkbox" id="btn" />
-                    <div class="overlay">
-                        <div class="popup">
-                            <table>
-                                <tr v-for="game in gameData">
-                                    <td v-if="game.gamePlayers.length >= 1 && game.gamePlayers[0]">{{game.gamePlayers[0].player.email}}</td>
-                                    <td v-if="game.gamePlayers.length == 2 && game.gamePlayers[1]">{{game.gamePlayers[1].player.email}}</td>
-                                    <td v-if="game.gamePlayers.length == 1">
-                                        <a v-if="game.gamePlayers[0].player.email != user.email" @click="joinGame(game.id)">Join</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="show">
+            <img class="img-politicans" src="images/politicans.png" alt="politicans">
         </div>
-
-
-        <div v-if="show" id="leaderTable" class="leaderTable table table-striped">
-            <table>
-                <thead class="jumbotron">
-                    <tr class="header">
-                        <th>Name</th>
-                        <th>Total</th>
-                        <th>Won</th>
-                        <th>Tied</th>
-                        <th>Lost</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="tableData" v-for="all in allInfo">
-                        <td>{{all.email}}</td>
-                        <td>{{all.total}}</td>
-                        <td>{{all.wins}}</td>
-                        <td>{{all.ties}}</td>
-                        <td>{{all.lost}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>-->
-
-        <img class="img-politicans" src="images/politicans.png" alt="politicans">
 
         <div>
             <div class="container">
-               <img class="img-logo" src="images/coollogo_com-24540743.png" alt="logo">
+                <img class="img-logo" src="images/coollogo_com-24540743.png" alt="logo">
                 <div class="row">
                     <div class="left">
                         <div class="indicator back">Back to Game</div>
@@ -137,7 +65,7 @@
                     <div action="" class="loginForm">
                         <div class="input_container">
                             <div class="formHeading">Back to Game</div>
-                            <table>
+                            <table class="table">
                                 <tr v-for="game in gameData" v-if="gameData.length != 0">
                                     <td v-if="game.gamePlayers[0]">{{game.gamePlayers[0].player.email}}</td>
                                     <td v-if="game.gamePlayers[1]">{{game.gamePlayers[1].player.email}}</td>
@@ -154,7 +82,7 @@
                     <div action="" class="signUpForm">
                         <div class="input_container">
                             <div class="formHeading">Join a Game</div>
-                            <table>
+                            <table class="table">
                                 <tr v-for="game in gameData">
                                     <td v-if="game.gamePlayers.length >= 1 && game.gamePlayers[0]">{{game.gamePlayers[0].player.email}}</td>
                                     <td v-if="game.gamePlayers.length == 2 && game.gamePlayers[1]">{{game.gamePlayers[1].player.email}}</td>
