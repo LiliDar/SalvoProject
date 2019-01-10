@@ -135,29 +135,16 @@ th {
     font-size: 20pt
 }
 
-
-
-
-
-body {
-
-    background-size: 100;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    font-family: sans-serif;
-    font-weight: 100;
-    color: #d9d9d9;
-}
+/*Game table*/
 
 #btn {
     display: none;
 }
 
-body > .label {
+.gameTable > .label {
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: 5%;
+    top: 15%;
     transform: translate(-50%, -50%);
 }
 
@@ -177,7 +164,7 @@ body > .label {
     background: RGBa(0, 0, 0, 0.2);
 }
 
-input:checked + .overlay {
+.input2:checked + .overlay {
     opacity: 1;
     z-index: 1;
 }
@@ -247,147 +234,11 @@ input:checked + .overlay {
     border-bottom: 1px #aaa solid;
 }
 
-.login {
-    margin: auto;
-    display: block;
-    width: 50px;
-    background: #eee;
-    padding: 10px;
-    cursor: pointer;
-    transition: 0.25s ease;
-    text-align: center;
-}
 
-.login:hover {
-    background: #e0e0e0;
-}
-
-.popup p {
-    text-align: center;
-    font-size: 20px;
-    margin: 30px 0;
-}
-
-.social-buttons {
-    margin: auto;
-    display: block;
-    width: 60%;
-}
-
-.social {
-    padding: 10px;
-    color: #fff;
-    transition: 0.25s ease;
-    cursor: pointer;
-    display: inline-block;
-}
-
-.red {
-    background: linear-gradient(to left, #dd0000 50%, #dd0000 50%, #9A0000 50%, #9A0000 50%);
-    width: 50px;
-    display: inline-block;
-}
-
-.red:hover {
-    background-position: 35px;
-}
-
-.blue {
-    background: linear-gradient(to left, #005DDD 50%, #005DDD 50%, #00419A 50%, #00419A 50%);
-    width: 70px;
-    display: inline-block;
-}
-
-.blue:hover {
-    background-position: 45px;
-}
-
-.sean {
-    opacity: 0;
-    background: #d9d9d9;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    height: 100px;
-    width: 250px;
-    color: #333;
-    transition: 0.25s ease;
-    z-index: 2;
-    display: none;
-}
-
-.info {
-    width: 70%;
-    box-sizing: border-box;
-    height: 100%;
-    padding: 10px;
-}
-
-.username {
-    color: #005DDD;
-    text-decoration: none;
-}
-
-.username:hover {
-    color: #00419A;
-    text-decoration: underline;
-}
-
-.info-text {
-    font-size: 13px;
-}
-
-#real {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    z-index: 3;
-}
-
-#real:hover + .sean {
-    display: block;
-    animation-duration: 0.25s;
-    animation-name: fadein;
-    animation-fill-mode: forwards;
-}
-
-.sean:hover {
-    display: block;
-    opacity: 1;
-}
-
-@keyframes fadein {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
+/*Login-Signup*/
 
 
-
-
-
-
-
-
-/*@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
 
 * {
     box-sizing: border-box;
@@ -400,20 +251,19 @@ body {
     height: 100%;
 }
 
-body {
+.body {
     font-family: 'Lato', sans-serif;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-
     justify-content: center;
-
     align-items: center;
     overflow: hidden;
+    
 }
 
-input {
+.input {
     font-family: inherit;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -424,18 +274,18 @@ input {
     border-radius: 0;
 }
 
-input[type="text"],
-input[type="password"] {
+.input[type="text"],
+.input[type="password"] {
     width: 100%;
     height: 40px;
 }
 
 button,
-input:focus {
+.input:focus {
     outline: 0;
 }
 
-::-webkit-input-placeholder {
+::-webkit-.input-placeholder {
     font-size: 16px;
     font-weight: 300;
     letter-spacing: -0.00933333em;
@@ -460,7 +310,7 @@ label {
     transition: all 0.2s ease-out;
 }
 
-input:placeholder-shown + label {
+.input:placeholder-shown + label {
     opacity: 0;
     -webkit-transform: translateY(15px);
     transform: translateY(15px);
@@ -500,6 +350,8 @@ input:placeholder-shown + label {
     border-radius: 4px;
     overflow: hidden;
     position: relative;
+    width: 1280px;
+    height: 643px;
 }
 
 .login-left {
@@ -560,7 +412,7 @@ input:placeholder-shown + label {
     margin-left: 15px;
 }
 
-input[type="checkbox"] {
+.input[type="checkbox"] {
     cursor: pointer;
     margin: 0;
     height: 22px;
@@ -570,7 +422,7 @@ input[type="checkbox"] {
     transition: all 180ms linear;
 }
 
-input[type="checkbox"]:before {
+.input[type="checkbox"]:before {
     border: 1px solid #aaa;
     background-color: #fff;
     content: '';
@@ -581,12 +433,12 @@ input[type="checkbox"]:before {
     transition: all 180ms linear;
 }
 
-input[type="checkbox"]:checked:before {
+.input[type="checkbox"]:checked:before {
     background: linear-gradient(198.08deg, #547fc4 45.34%, #547fc4 224.21%);
     border: 1px solid #C359AA;
 }
 
-input[type="checkbox"]:after {
+.input[type="checkbox"]:after {
     content: '';
     border: 2px solid #fff;
     border-right: 0;
@@ -603,7 +455,7 @@ input[type="checkbox"]:after {
     transition: all 180ms linear;
 }
 
-input[type="checkbox"]:checked:after {
+.input[type="checkbox"]:checked:after {
     opacity: 1;
 }
 
@@ -637,4 +489,138 @@ input[type="checkbox"]:checked:after {
 
 .btn-secondary {
     color: #547fc4;
-}*/
+}
+
+/*game tables*/
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+/*
+font-family: 'Source Sans Pro', sans-serif;
+font-family: 'Poppins', sans-serif;
+font-family: 'Montserrat', sans-serif;
+*/
+
+
+
+
+
+.container {
+    /*    width: 110rem;*/
+    height: 300px;
+    background: rgba(0,51,102,0.9);
+    border-radius: 2px;
+    margin-top: -150px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-family: 'Source Sans Pro', sans-serif;
+    /*    overflow: hidden;*/
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    position: fixed;
+    z-index: 1;
+}
+
+.row {
+    display: flex;
+    height: 100%;
+    padding: 1rem;
+    font-size: 2.2rem;
+    letter-spacing: 3px;
+
+}
+
+.indicator {
+    border: 2px solid #fff;
+    display: inline;
+    padding: .6rem 1.5rem;
+    border-radius: 3px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%)translateY(-50%);
+    user-select: none;
+}
+
+.indicator:hover {
+    cursor: pointer;
+}
+
+.left {
+    margin-left: 5%
+}
+
+.row .left,
+.row .right, .center {
+    width: 30%;
+    height: 100%;
+    position: relative;
+
+}
+
+.slider {
+    position: absolute;
+    top: 0;
+    color: #000;
+    background: rgba(255, 255, 255, 1);
+    width: 350px;
+    height: 370px;
+    border-radius: 3px;
+    margin-top: -30px;
+    overflow: hidden;
+}
+
+.input_container {
+    height: 35rem;
+    background-color: w
+}
+
+.formHeading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    letter-spacing: 3px;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+    text-align: center;
+    text-transform: uppercase;
+}
+.signUpForm,.loginForm{
+    overflow: hidden;
+}
+
+.loginForm tr, .signUpForm tr {
+    height: 20%;
+    font-size: 10px;
+    width: 20%
+
+}
+
+.loginForm td, .signUpForm td  {
+    height: 75%;
+    width: 30%;
+    font-size: 10px;
+}
+
+.img-politicans {
+    width: 100%;
+    margin-top: -10%;
+    margin-left: -2.9%
+}
+
+.img-logo {
+    height: 100px;
+    position: absolute;
+    width: 50%;
+    margin-left: 25%;
+    z-index: 1
+    
+}

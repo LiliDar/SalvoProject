@@ -83,16 +83,19 @@ public class SalvoController {
         }
         }
 
-    @RequestMapping(path = "api/game/{gameId}/players", method = RequestMethod.POST)
+    @RequestMapping(path = "/game/{gameId}/players", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> getGameJoin (@PathVariable Long gameId, Authentication authentication){
         Game game = gameRepository.findOne(gameId);
         Player player = currentPlayer(authentication);
 
         if(authentication == null){
-            return new ResponseEntity<>(makeMap("error", "Need to be logged in to join a game")
+            return new ResponseEntity<>(makeMap("error", "Log in to join a game")
                     , HttpStatus.UNAUTHORIZED);
         }else if(game == null){
             return new ResponseEntity<>(makeMap("error", "No existing game")
+                    , HttpStatus.FORBIDDEN);
+        } else if (game.getGamePlayers().size() == 2){
+            return new ResponseEntity<>(makeMap("error", "Game is full")
                     , HttpStatus.FORBIDDEN);
         }else{
             GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(game, player));
@@ -100,7 +103,6 @@ public class SalvoController {
                     , HttpStatus.CREATED);
         }
     }
-
 
     @RequestMapping("/gamePlayers")
     public List <GamePlayer> getAllGamePlayers() {
