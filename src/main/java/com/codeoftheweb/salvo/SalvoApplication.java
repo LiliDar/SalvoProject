@@ -127,6 +127,7 @@ public class SalvoApplication {
             gamePlayerRepository.save(gamePlayer8_1);
             gamePlayerRepository.save(gamePlayer8_2);
 
+            /*
             List<String> shipLocation1_1 = Arrays.asList("H2","H3", "H4");
             List<String> shipLocation1_2 = Arrays.asList("E1","F1", "G1");
             List<String> shipLocation1_3 = Arrays.asList("B4","B5");
@@ -297,7 +298,8 @@ public class SalvoApplication {
             shipRepository.save(ship8_3);
 
             Ship ship8_4 = new Ship("Destroyer", shipLocation2_4, gamePlayer8_2);
-            shipRepository.save(ship8_4);
+            shipRepository.save(ship8_4);*/
+
 
             Score score1_1 = new Score(game1, player1, 1.0);
             Score score1_2 = new Score(game1, player2, 0.0);

@@ -3,16 +3,18 @@ var app = new Vue({
     el: '#app',
 
     data: {
+        path: 0,
         allData: [],
         allInfo: [],
-        show: false,
+        /*show: false,
         appear: true,
-        seen: true,
+        seen: false,*/
         gameData: [],
         currentPlayer: [],
         gamePlayer: [],
         user: {},
         isLogged: false,
+
 
 
     },
@@ -39,7 +41,7 @@ var app = new Vue({
                     app.getData();
                     app.findGames();
                     app.modal();
-                    app.tableModal();
+                    app.tableModal()
                 })
         },
 
@@ -72,11 +74,14 @@ var app = new Vue({
                     if (r.status == 200)
                         console.log(r)
 
-                    swal("Success!", "You Logged In Successfully")
+                    /*swal("Success!", "You Logged In Successfully")*/
                     location.reload();
                     app.isLogged = true;
-                    app.appear = false;
-                    app.show = true
+                    /*app.appear = false;
+                    app.show = true;
+                    app.seen = true;*/
+                    app.path = 1;
+                    app.tableModal()
                 })
                 .catch(e => console.log(e))
         },
@@ -99,6 +104,8 @@ var app = new Vue({
                     app.isLogged = false;
                     app.appear = true;
                     app.show = false;
+                    app.seen = false;
+                    app.path = 0;
 
 
                 })
@@ -123,8 +130,9 @@ var app = new Vue({
 
             location.reload();
             app.isLogged = true;
-            app.appear = false;
-            app.show = true
+            /*app.appear = false;
+            app.show = true;*/
+            app.path = 1;
         },
 
         findGames() {
@@ -147,8 +155,9 @@ var app = new Vue({
                     app.currentPlayer = data.currentPlayer[0];
                     if (data.currentPlayer) {
                         app.isLogged = true;
-                        app.appear = false;
-                        app.show = true
+                        /*app.appear = false;
+                        app.show = true*/
+                        app.path = 1;
                     }
                 })
         },
@@ -196,7 +205,9 @@ var app = new Vue({
                 .catch(e => console.log(e))
         },
 
-
+       
+        
+        
 
         modal() {
             var openLoginRight = document.querySelector('.h1');
@@ -208,48 +219,47 @@ var app = new Vue({
         },
 
         tableModal() {
-            $(function () {
 
-                var widthCont = 110;
-                var slider = $('.slider');
-                var login = $('.back');
-                var signup = $('.join');
-                $('.container').css('width', widthCont + 'rem');
-                var sliderMargin = widthCont / 3.5;
-                var sliderWidth = $('.slider').css('width').replace('px', '');
-                slider.css('transform', 'translateX(-' + sliderWidth / 1.2 + 'px)');
+            var widthCont = 110;
+            var slider = $('.slider');
+            var login = $('.back');
+            var signup = $('.join');
+            $('.container').css('width', widthCont + 'rem');
+            var sliderMargin = widthCont / 3.5;
+            var sliderWidth = $('.slider').css('width').replace('px', '');
+            slider.css('transform', 'translateX(-' + sliderWidth / 1.2 + 'px)');
 
 
+            slider.css('margin-left', sliderMargin + "rem");
+
+            $('.signUpForm').hide();
+
+            login.slideUp();
+            login.stop().click(function () {
+
+                $('.loginForm').fadeToggle(700);
+                $('.signUpForm').fadeToggle(700);
+                slider.css("transition", "all .3s cubic-bezier(.87,.32,.79,.6)");
                 slider.css('margin-left', sliderMargin + "rem");
-
-                $('.signUpForm').hide();
-
+                slider.css("height", "34rem");
+                slider.css("border-style", "solid");
                 login.slideUp();
-                login.stop().click(function () {
-
-                    $('.loginForm').fadeToggle(700);
-                    $('.signUpForm').fadeToggle(700);
-                    slider.css("transition", "all .3s cubic-bezier(.87,.32,.79,.6)");
-                    slider.css('margin-left', sliderMargin + "rem");
-                    slider.css("height", "34rem");
-                    slider.css("border-style", "solid");
-                    login.slideUp();
-                    signup.slideDown();
-                });
-                signup.stop().click(function () {
-                    $('.loginForm').fadeToggle(700);
-                    $('.signUpForm').fadeToggle(700);
-                    slider.css("transition", "all .5s cubic-bezier(.87,.32,.79,.6)");
-                    slider.css('margin-left', sliderMargin * 3.15+ "rem");
-                    signup.slideUp()
-                    login.slideDown();
-                    slider.css("height", "34rem");
-                    slider.css("border-style", "solid");
-                    slider.css("overflow", "scroll");
-                    slider.css("border-right-width", "5px");
-                    slider.css("border-top-width", "5px");
-                });
-             });
+                signup.slideDown();
+            });
+            signup.stop().click(function () {
+                $('.loginForm').fadeToggle(700);
+                $('.signUpForm').fadeToggle(700);
+                slider.css("transition", "all .5s cubic-bezier(.87,.32,.79,.6)");
+                slider.css('margin-left', sliderMargin * 3.15 + "rem");
+                signup.slideUp()
+                login.slideDown();
+                slider.css("height", "34rem");
+                slider.css("border-style", "solid");
+                slider.css("overflow", "scroll");
+                slider.css("border-right-width", "5px");
+                slider.css("border-top-width", "5px");
+            });
         },
+        
     }
 })

@@ -10,7 +10,7 @@
 }
 
 .ship-location {
-    background-color: aqua;
+    ;
 }
 
 .salvo-location {
@@ -29,7 +29,7 @@
 td {
     border: 3px solid grey;
     width: 50px;
-    height: 70px;
+    height: 50px;
     background-color: white
 }
 
@@ -44,8 +44,6 @@ th {
     font-family: 'Bungee', cursive;
     color: aliceblue
 }
-
-
 
 .leaderTable-title {
     z-index: 1;
@@ -135,103 +133,8 @@ th {
     font-size: 20pt
 }
 
-/*Game table*/
-
-#btn {
-    display: none;
-}
-
-.gameTable > .label {
-    position: absolute;
-    left: 5%;
-    top: 15%;
-    transform: translate(-50%, -50%);
-}
-
-.label {
-    background: RGBa(205, 205, 205, 0.1);
-    padding: 10px;
-    transition: 0.25s ease;
-    cursor: pointer;
-    border: 5px solid transparent;
-}
-
-.label:hover {
-    border-color: RGBa(0, 0, 0, 0.2);
-}
-
-.label:active {
-    background: RGBa(0, 0, 0, 0.2);
-}
-
-.input2:checked + .overlay {
-    opacity: 1;
-    z-index: 1;
-}
-
-.overlay {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: RGBa(255, 255, 255, 0.3);
-    opacity: 0;
-    z-index: -1;
-    transition: 0.5s ease;
-}
-
-.popup {
-    max-height: 90%;
-    position: absolute;
-    padding: 10px;
-    left: 50%;
-    top: 50%;
-    width: 300px;
-    overflow-y: auto;
-    background: #fff;
-    color: #999;
-    transform: translate(-50%, -50%);
-    border-radius: 5px;
-}
-
-.gameTable .popup {
-    position: absolute;
-    padding: 10px;
-    left: 50%;
-    top: 50%;
-    height: 500px;
-    width: 400px;
-    background: #fff;
-    color: #999;
-    transform: translate(-50%, -50%);
-    border-radius: 5px;
-}
-
-.title {
-    font-size: 25px;
-    text-align: center;
-    display: block;
-}
-
-.popup input {
-    display: block;
-    margin: 20px 0;
-    width: 50%;
-    padding: 5px 0;
-    transition: 0.25s ease;
-    color: #333;
-    border: none;
-    border-bottom: 1px solid transparent;
-    font-size: 15px;
-    outline: none;
-}
-
-.popup input:focus {
-    width: 90%;
-    border-bottom: 1px #aaa solid;
+.ReturnGameTable {
+    table-layout: fixed;
 }
 
 
@@ -260,7 +163,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    
+
 }
 
 .input {
@@ -340,6 +243,7 @@ label {
     letter-spacing: -0.00933333em;
     font-weight: 600;
     padding-bottom: 15px;
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 .login-wrapper {
@@ -491,7 +395,14 @@ label {
     color: #547fc4;
 }
 
+.title-img {
+    position: fixed;
+}
+
+
 /*game tables*/
+
+
 
 * {
     margin: 0px;
@@ -503,27 +414,18 @@ html {
     font-size: 62.5%;
 }
 
-/*
-font-family: 'Source Sans Pro', sans-serif;
-font-family: 'Poppins', sans-serif;
-font-family: 'Montserrat', sans-serif;
-*/
-
-
-
 
 
 .container {
-    /*    width: 110rem;*/
     height: 300px;
-    background: rgba(0,51,102,0.9);
+    background: rgba(0, 51, 102, 0.9);
     border-radius: 2px;
     margin-top: -150px;
     margin-left: 50%;
     transform: translateX(-50%);
     color: #fff;
     font-family: 'Source Sans Pro', sans-serif;
-    /*    overflow: hidden;*/
+
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
     position: fixed;
     z-index: 1;
@@ -559,7 +461,8 @@ font-family: 'Montserrat', sans-serif;
 }
 
 .row .left,
-.row .right, .center {
+.row .right,
+.center {
     width: 30%;
     height: 100%;
     position: relative;
@@ -593,18 +496,21 @@ font-family: 'Montserrat', sans-serif;
     text-align: center;
     text-transform: uppercase;
 }
-.signUpForm,.loginForm{
+
+.signUpForm,
+.loginForm {
     overflow: hidden;
 }
 
-.loginForm tr, .signUpForm tr {
+.loginForm tr,
+.signUpForm tr {
     height: 20%;
     font-size: 10px;
     width: 20%
-
 }
 
-.loginForm td, .signUpForm td  {
+.loginForm td,
+.signUpForm td {
     height: 75%;
     width: 30%;
     font-size: 10px;
@@ -622,13 +528,217 @@ font-family: 'Montserrat', sans-serif;
     width: 50%;
     margin-left: 25%;
     z-index: 1
-    
 }
 
-.loginForm{
+.img-logo2 {
+    height: 100px;
+    position: absolute;
+    width: 50%;
+    margin-left: 25%;
+    z-index: 1;
+    margin-top: -7%
+}
+
+.loginForm {
     width: 350px;
     height: 340px;
     border-style: solid;
     overflow: scroll;
     top: 1%;
 }
+
+.logout-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    width: 11%;
+    position: absolute;
+    margin-top: 12%;
+    margin-left: 44%;
+}
+
+
+
+
+/*game.html*/
+
+.img-trump,
+.img-merkel,
+.img-may,
+.img-orban {
+    width: 10%
+}
+
+.img-putin {
+    width: 8.5%
+}
+
+td,
+th {
+    cursor: pointer;
+    background: -moz-linear-gradient(top, #ffffff, #D1E3E9);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#D1E3E9));
+    text-align: center;
+}
+
+td:hover {
+    background: -moz-linear-gradient(top, #249ee4, #057cc0);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#249ee4), to(#057cc0));
+}
+
+td:active {
+    background: -moz-linear-gradient(top, #057cc0, #249ee4);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#057cc0), to(#249ee4));
+}
+
+.gameTables {
+    display: flex;
+
+}
+
+#result {
+    font-weight: bold;
+    font-size: 16pt;
+}
+
+.userTable,
+.opponentTable {
+    width: 50%;
+    height: 50%
+}
+
+.carrier {
+    background-image: url(images/trump.png);
+    background-size: 45px 50px;
+    background-color: #D1E3E9;
+}
+
+.battleship {
+    background-image: url(images/putin.png);
+    background-size: 45px 50px;
+    background-color: #D1E3E9;
+}
+
+.submarine {
+    background-image: url(images/merkel.png);
+    background-size: 45px 50px;
+    background-color: #D1E3E9;
+}
+
+.destroyer {
+    background-image: url(images/may.png);
+    background-size: 45px 50px;
+    background-color: #D1E3E9;
+}
+
+.patrol {
+    background-image: url(images/orban.png);
+    background-size: 55px 50px;
+    background-color: #D1E3E9;
+}
+
+
+
+
+
+
+
+
+
+
+
+h1 {
+  text-align: center;
+  font-family: Tahoma, Arial, sans-serif;
+  color: #06D85F;
+  margin: 80px 0;
+}
+
+.box {
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.2);
+  padding: 35px;
+  border: 2px solid #fff;
+  border-radius: 20px/50px;
+  background-clip: padding-box;
+  text-align: center;
+  margin-top: 100%
+}
+
+.button {
+  font-size: 1em;
+  padding: 10px;
+  color: #fff;
+  border: 2px solid;
+  border-radius: 20px/50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+
+
+
+
+
+
+
+
+
+

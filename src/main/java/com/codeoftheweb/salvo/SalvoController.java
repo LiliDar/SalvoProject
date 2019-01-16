@@ -104,6 +104,43 @@ public class SalvoController {
         }
     }
 
+    @RequestMapping(path="/games/players/{gamePlayerId}/ships", method=RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> placingShips(@PathVariable long gamePlayerId,
+                                                            @RequestBody List<Ship> ships,
+                                                            Authentication authentication) {
+        GamePlayer gamePlayer = gamePlayerRepository.findOne(gamePlayerId);
+
+        if(authentication == null){
+            return new ResponseEntity<>(makeMap("error", "No user is logged in")
+                    , HttpStatus.UNAUTHORIZED);
+
+        }else if(gamePlayer == null){
+            return new ResponseEntity<>(makeMap("error", "This user does not exist")
+                    , HttpStatus.UNAUTHORIZED);
+
+        }else if(gamePlayer.getPlayer() != currentPlayer(authentication)){
+            return new ResponseEntity<>(makeMap("error", "This is not your game")
+                    , HttpStatus.UNAUTHORIZED);
+
+        }else if(gamePlayer.getShips().size() == 5) {
+            return new ResponseEntity<>(makeMap("error", "Ships has been placed already")
+                    , HttpStatus.FORBIDDEN);
+
+        } else if (ships.isEmpty()) {
+            return new ResponseEntity<>(makeMap("error", "Missing Ships")
+                    , HttpStatus.FORBIDDEN);
+
+        }else{
+            for (Ship ship : ships) {
+                ship.setGamePlayer(gamePlayer);
+                shipRepository.save(ship);
+            }
+
+            return new ResponseEntity<>(makeMap("success", "Ships are created")
+                    , HttpStatus.CREATED);
+        }
+    }
+
     @RequestMapping("/gamePlayers")
     public List <GamePlayer> getAllGamePlayers() {
         return gamePlayerRepository.findAll();
@@ -135,6 +172,7 @@ public class SalvoController {
         if (gamePlayer.getPlayer().getId() == user.getId()) {
         GamePlayer enemy = getEnemyGamePlayer(gamePlayer);
 
+        dto.put("currentPlayer", playerRepository.findByEmail(authentication.getName()));
         dto.put("game", makeGameDTO(gamePlayer.getGame()));
         dto.put("userInfo", makeGamePlayerDTO(gamePlayer));
         dto.put("userShips", gamePlayer.getShips()

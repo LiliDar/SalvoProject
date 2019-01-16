@@ -13,7 +13,8 @@
 
 <body class="body-game">
     <div id="app">
-        <h1 class="text-center">Game</h1>
+        <h1 class="text-center"></h1>
+        <img class="img-logo2" src="images/coollogo_com-24540743.png" alt="logo">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -23,7 +24,7 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="games.html" @click="logOut()">Log Out <span class="sr-only">(current)</span></a>
                     </li>
-                       <li class="nav-item active">
+                    <li class="nav-item active">
                         <a class="nav-link" href="games.html">Home <span class="sr-only">(current)</span></a>
                     </li>
                 </ul>
@@ -31,15 +32,15 @@
         </nav>
 
         <div class="game-title">
-            <p v-for="player in playerEmail">{{player}} (you) </p>
+            <p v-for="player in currentPlayer">{{player.email}} (you) </p>
             <p>VS</p>
             <p v-for="opponent in opponentEmail"> {{opponent}}</p>
         </div>
-        
-          
 
-        <div class="userTable">
-            <img src="images/control%20pannel.png" class="control-img" alt="control image">
+
+
+
+        <!--<img src="images/control%20pannel.png" class="control-img" alt="control image">
             <div class="tables table-striped">
                 <table id="userTable">
                     <thead id="userTable-headers">
@@ -51,16 +52,95 @@
                 <table id="oponentTable">
                     <thead id="oponentTable-headers">
                     </thead>
-                    <tbody id="oponentTable-rows">
+                    <tbody id="oponentTable-rows" @click="shipLocation(this)">
                     </tbody>
                 </table>
+            </div>-->
+
+
+        <div class="gameTables">
+            <div id="result"> </div>
+            <table id="userTable">
+                <tr>
+                    <th></th>
+                    <th class="table-light" scope="column" v-for="key in columns"> {{key}}</th>
+                </tr>
+                <tr v-for="r in rows">
+                    <th class="table-light" scope="row">{{r}}</th>
+                    <td v-for="c in columns" class="userCells" :id="'U'+r+c"></td>
+                </tr>
+
+            </table>
+
+            <div>
+                <div class="box">
+                    <a class="button" href="#popup1">Select a Politican</a>
+                </div>
+
+                <div id="popup1" class="overlay">
+                    <div class="popup">
+                        <h2>Select your Politican</h2>
+                        <a class="close" href="#">&times;</a>
+                        <div class="content">
+                            <div id="ships">
+                                <div @click="selectTrump()" id="carrier">
+                                    <img class="img-trump" src="images/trump.png" alt="trump">
+                                    <img class="img-trump" src="images/trump.png" alt="trump">
+                                    <img class="img-trump" src="images/trump.png" alt="trump">
+                                    <img class="img-trump" src="images/trump.png" alt="trump">
+                                    <img class="img-trump" src="images/trump.png" alt="trump">
+                                    <p>Trump</p>
+                                </div>
+                                <div @click="selectPutin()" id="battleship">
+                                    <img class="img-putin" src="images/putin.png" alt="putin">
+                                    <img class="img-putin" src="images/putin.png" alt="putin">
+                                    <img class="img-putin" src="images/putin.png" alt="putin">
+                                    <img class="img-putin" src="images/putin.png" alt="putin">
+                                    <p>Putin</p>
+                                </div>
+                                <div @click="selectMerkel()" id="submarine">
+                                    <img class="img-merkel" src="images/merkel.png" alt="merkel">
+                                    <img class="img-merkel" src="images/merkel.png" alt="merkel">
+                                    <img class="img-merkel" src="images/merkel.png" alt="merkel">
+                                    <p>Merkel</p>
+                                </div>
+                                <div @click="selectMay()" id="destroyer">
+                                    <img class="img-may" src="images/may.png" alt="may">
+                                    <img class="img-may" src="images/may.png" alt="may">
+                                    <img class="img-may" src="images/may.png" alt="may">
+                                    <p>May</p>
+                                </div>
+                                <div @click="selectOrban()" id="patrol">
+                                    <img class="img-orban" src="images/orban.png" alt="orban">
+                                    <img class="img-orban" src="images/orban.png" alt="orban">
+                                    <p>Orban</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <table id="opponentTable">
+                <tr>
+                    <th></th>
+                    <th class="table-light" v-for="key in columns">{{key}}</th>
+                </tr>
+                <tr v-for="r in rows">
+                    <th class="table-light" scope="row">{{r}}</th>
+                    <td v-for="c in columns" class="opponentCells" :id="'O'+r+c"></td>
+                </tr>
+            </table>
         </div>
+
+
+
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script src="game.js"></script>
-    
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

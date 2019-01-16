@@ -4,23 +4,31 @@ var app = new Vue({
 
     data: {
         id: location.search.split("=")[1],
-        columnHeaders: ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-        rowHeaders: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
+        columns: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        rows: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
 
+        mainData: [],
         gamePlayers: [],
         userInfo: [],
         playerEmail: [],
         opponentEmail: [],
+        adjacentCells: [],
+        currentPlayer: [],
+
+        shipLocations: [],
 
         userShips: [],
         userSalvos: [],
         enemySalvos: [],
 
+        ship: '',
+        shipLogo: [],
+
         userGrid: "U",
-        opponentGrid: "Y",
+        opponentGrid: "O",
 
         placeUserSalvo: "#U",
-        placeOpponentSalvo: "#Y",
+        placeOpponentSalvo: "#O",
 
         userTables: "userTable",
         userHeader: "userTable-headers",
@@ -49,21 +57,23 @@ var app = new Vue({
                     app.gamePlayers = data.game.gamePlayer;
                     app.userInfo = data.userInfo;
                     app.getPlayers();
+                    app.currentPlayer = data.currentPlayer
 
                     app.userShips = data.userShips;
                     app.userSalvos = data.userSalvos;
                     app.enemySalvos = data.enemySalvos;
 
-                    app.gameTable(app.userTables, app.userHeader, app.userRow, app.userGrid);
-                    app.gameTable(app.opponentTables, app.opponentHeader, app.opponentRow, app.opponentGrid);
 
-                    app.printSalvos(app.userSalvos, app.placeOpponentSalvo);
-                    app.printSalvos(app.enemySalvos, app.placeUserSalvo);
+                    /*app.printSalvos(app.userSalvos, app.placeOpponentSalvo);
+                    app.printSalvos(app.enemySalvos, app.placeUserSalvo);*/
                     app.printShips();
+                    app.shipLocation(app.userGrid);
+                    app.shipLocation(app.opponentGrid);
+
                 })
 
         },
-        
+
         getPlayers() {
             let playerInfo = [];
             let idInfo = [];
@@ -76,87 +86,16 @@ var app = new Vue({
             for (i = 0; i < gamePlayer.length; i++) {
                 playerInfo.push(gamePlayer[i].email)
                 idInfo.push(gamePlayer[i].playerId);
-                
-                console.log(gamePlayer[i].email)
-                console.log(gamePlayer[i].id)
-                console.log(gamePlayer[i].playerId)
-                
-                
+
                 if (idInfo == user.playerId) {
                     player.push(user.email)
 
                 } else {
                     opponent.push(playerInfo[1]);
-                } 
-            }
-            console.log(player)
-            this.playerEmail = player;
-            console.log(opponent)
-            this.opponentEmail = opponent
-        },
-        
-
-        /*getPlayers() {
-            let playerInf = [];
-            let player = [];
-            let opponent = [];
-
-            let gamePlayer = this.gamePlayers;
-            let user = this.userInfo;
-
-            for (i = 0; i < gamePlayer.length; i++) {
-                let players = gamePlayer[i].player;
-                playerInf.push(players);
-            }
-
-            for (i = 0; i < playerInf.length; i++) {
-                if (playerInf[i].id === this.userInfo.id) {
-                    player.push(this.userInfo.email)
-
-                } else {
-                    opponent.push(playerInf[i].email);
                 }
             }
             this.playerEmail = player;
             this.opponentEmail = opponent;
-        },*/
-
-        gameTable(table, header, row, grid) {
-
-            var rowHead = this.rowHeaders;
-            var columnHead = this.columnHeaders;
-
-            var table = document.getElementById(table);
-            var theader = document.getElementById(header);
-            var tbody = document.getElementById(row);
-
-            var tRow0 = document.createElement("tr");
-            var td0 = document.createElement("td");
-            tRow0.appendChild(td0);
-
-            for (var i = 0; i < 10; i++) {
-                var tdNumbers = document.createElement("td");
-                tdNumbers.innerHTML = i + 1;
-
-                tRow0.appendChild(tdNumbers);
-            }
-            theader.appendChild(tRow0);
-
-            for (var j = 0; j < 10; j++) {
-                var rows = document.createElement("tr");
-                var tdLetters = document.createElement("td");
-                tdLetters.innerHTML = String.fromCharCode(65 + j);
-
-                rows.append(tdLetters);
-                tbody.append(rows);
-
-                for (var k = 0; k < 10; k++) {
-                    var tdBoard = document.createElement("td");
-                    tdBoard.id = grid + rowHead[j] + columnHead[k];
-
-                    rows.append(tdBoard);
-                }
-            }
         },
 
         printShips() {
@@ -166,15 +105,17 @@ var app = new Vue({
                 for (var j = 0; j < shipLocations.length; j++) {
                     let location = shipLocations[j];
                     if (location != null) {
-                        $("#U" + location).addClass('ship-location ' + shipType);
+                        $("button").click(function () {
+                            $("#carrier").clone().appendTo("#U" + location);
+                        });
                     }
                 }
             }
         },
-        printSalvos(salvo, grid) {
+
+        /*printSalvos(salvo, grid) {
             for (var i = 0; i < salvo.length; i++) {
                 let salvoLocations = salvo[i].locations;
-                console.log(salvoLocations)
                 for (var j = 0; j < salvoLocations.length; j++) {
                     let location = salvoLocations[j];
                     if (location != null) {
@@ -182,8 +123,8 @@ var app = new Vue({
                     }
                 }
             }
-        },
-        
+        },*/
+
         logOut() {
 
             fetch("/api/logout", {
@@ -197,10 +138,82 @@ var app = new Vue({
                 .then(r => {
                     if (r.status == 200)
                         console.log(r)
-                
+
                     app.show = false;
                 })
                 .catch(e => console.log(e))
         },
+
+        placeShips(ship) {
+
+            fetch('/api/games/players/' + this.id + '/ships', {
+                    credentials: 'include',
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify([{
+                        type: ship,
+                        location: ['A1', 'A2', 'A2']
+                    }]),
+                })
+                .then(r => r.json().then(e => console.log(e)))
+                .catch(e => console.log(e))
+        },
+
+
+        shipLocation(letter) {
+
+            document.getElementById('userTable').addEventListener('click', (e) => {
+                console.log(e.target.id)
+
+                let location = e.target.id;
+                app.adjacentCells = [];
+                let gameId = e.target.id;
+                let rowHeader = gameId.charAt(1);
+                let columnHeader = gameId.charAt(2);
+
+                let shipLocation = letter + rowHeader + columnHeader;
+                let newNumber = parseInt(columnHeader);
+
+
+                e.target.classList.add(this.ship);
+                
+                console.log(this.ship)
+
+
+                //if(ship == 'carrier') {
+                //   e.target.classList.add('carrier');
+                // }
+
+                /*$(e.target).click(function () {
+                        $("#carrier").clone().appendTo("#" + location);
+                    });*/
+
+
+            });
+        },
+        
+        selectTrump(){
+            this.ship = 'carrier'
+        },
+        
+        selectPutin(){
+            this.ship = 'battleship'
+        },
+        
+        selectMerkel(){
+            this.ship = 'submarine'
+        },
+        
+        selectMay(){
+            this.ship = 'destroyer'
+        },
+        
+        selectOrban(){
+            this.ship = 'patrol'
+        },
+        
     },
 })
