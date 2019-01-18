@@ -735,6 +735,11 @@ h1 {
 
 
 
+.userCells.carrier.not-possible-cell{
+    background-color: red
+}
+
+
 
 
 
