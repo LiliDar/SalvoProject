@@ -25,7 +25,7 @@ var app = new Vue({
 
         shipType: {
             'carrier': 5,
-            'battelship': 4,
+            'battleship': 4,
             'submarine': 3,
             'destroyer': 3,
             'patrol': 2,
@@ -46,13 +46,29 @@ var app = new Vue({
         opponentTable: "oponentTable",
         opponentHeader: "oponentTable-headers",
         opponentRow: "oponentTable-rows",
+        allValidLocations: [],
+
+        select_box: true,
     },
 
     created: function () {
+        this.fillAllValidLocationArray();
         this.getGamesData()
     },
 
     methods: {
+
+        fillAllValidLocationArray() {
+            let rows = this.rows;
+            let columns = this.columns;
+            let array = [];
+            for (var i = 0; i < rows.length; i++) {
+                for (var j = 0; j < columns.length; j++) {
+                    array.push(rows[i] + columns[j]);
+                }
+            }
+            this.allValidLocations = array;
+        },
 
         getGamesData() {
 
@@ -61,6 +77,9 @@ var app = new Vue({
                     return response.json()
                 })
                 .then(function (json) {
+
+
+
                     console.log(json);
                     data = json;
 
@@ -77,9 +96,6 @@ var app = new Vue({
                     /*app.printSalvos(app.userSalvos, app.placeOpponentSalvo);
                     app.printSalvos(app.enemySalvos, app.placeUserSalvo);*/
                     app.printShips();
-
-                    
-
                     app.shipLocation()
 
                 })
@@ -174,128 +190,145 @@ var app = new Vue({
                 .catch(e => console.log(e))
         },
 
-        letters(letter) {
-            if (letter == 'A') {
-                return letter = 1;
-            } else if (letter == 'B') {
-                return letter = 2;
-            } else if (letter == 'C') {
-                return letter = 3;
-            } else if (letter == 'D') {
-                return letter = 4;
-            } else if (letter == 'E') {
-                return letter = 5;
-            } else if (letter == 'F') {
-                return letter = 6;
-            } else if (letter == 'G') {
-                return letter = 7;
-            } else if (letter == 'H') {
-                return letter = 8;
-            } else if (letter == 'I') {
-                return letter = 9;
-            } else if (letter == 'J') {
-                return letter = 10;
-            } else {
-                console.log('error')
-            }
-        },
-
-        numbers(number) {
-            app.letters(app.rows)
-            if (number == 1) {
-                return number = 'A';
-            } else if (number == 2) {
-                return number = 'B';
-            } else if (number == 3) {
-                return number = 'C';
-            } else if (number == 4) {
-                return number = 'D';
-            } else if (number == 5) {
-                return number = 'E';
-            } else if (number == 6) {
-                return number = 'F';
-            } else if (number == 7) {
-                return number = 'G';
-            } else if (number == 8) {
-                return number = 'H';
-            } else if (number == 9) {
-                return number = 'I';
-            } else if (number == 10) {
-                return number = 'J';
-            } else {
-                console.log('error')
-            }
-        },
-
-
         shipLocation() {
 
             document.getElementById('userTable').addEventListener('click', (e) => {
-
+                
+               
+                
+                let length = app.shipType[app.ship];
 
                 let locationCell = e.target.id;
-                console.log(locationCell)
                 let rowHeader = locationCell.charAt(1);
                 let columnHeader = locationCell.charAt(2);
-                let adjacentRows = app.numbers(app.rows);
-                console.log(adjacentRows)
+                let isFinished = false;
 
-                let shipLocation = "U" + rowHeader + columnHeader;
-                app.shipLocations.push(shipLocation);
-                console.log(app.shipLocations.toString())
+                if (!e.target.classList.contains(app.ship)) {
+                    
+                    app.select_box = false;
+                    console.log("this is the first click")
 
-                let adjacentColumns = parseInt(columnHeader);
-                let arrayRight = [];
-                let arrayLeft = [];
-                let arrayDown = [];
-                let arrayUp = [];
+                    let shipLocation = "U" + rowHeader + columnHeader;
+                    app.shipLocations.push(shipLocation);
 
-                for (let i = 1; i < 5; i++) {
-                    if ((adjacentColumns + i) < 11) {
-                        let cell = rowHeader + (adjacentColumns + i);
-                        arrayRight.push(cell)
-                    }
-                    if ((adjacentColumns - i) > 0) {
-                        let cell = rowHeader + (adjacentColumns - i);
-                        arrayLeft.push(cell)
-                    }
-                    if ((adjacentRows + i) < 11) {
-                        let row = letter(adjacentRows + i);
-                        let cell = row + adjacentColumns;
-                        arrayDown.push(cell)
-                    }
-                    if ((adjacentRows - i) > 0) {
-                        let row = letter(adjacentRows - i);
-                        let cell = row + adjacentColumns;
-                        arrayUp.push(cell)
-                    }
-                }
-                console.log(arrayUp, arrayDown)
+                    let adjacentColumns = parseInt(columnHeader);
+                    let adjacentRows = app.rows.indexOf(rowHeader);
 
-                if (arrayRight.length <= 3) {
-                    arrayRight.forEach(cell => {
-                        document.getElementById("U" + cell).classList.add("not-possible-cell")
+                    let arrayRight = [];
+                    let arrayLeft = [];
+                    let arrayDown = [];
+                    let arrayUp = [];
+
+
+                    for (let i = 1; i < length; i++) {
+                        if ((adjacentColumns + i) < 11) {
+                            let cell = rowHeader + (adjacentColumns + i);
+                            arrayRight.push(cell)
+
+                            if (!app.allValidLocations.includes(cell))
+                                arrayRight = []
+                        }
+                        if ((adjacentColumns - i) > -1) {
+                            let cell = rowHeader + (adjacentColumns - i);
+                            arrayLeft.push(cell)
+
+                            if (!app.allValidLocations.includes(cell))
+                                arrayLeft = []
+                        }
+                        if ((adjacentRows + i) < 11) {
+                            let row = app.rows[adjacentRows + i];
+                            let cell = row + adjacentColumns;
+                            arrayDown.push(cell)
+
+                            if (!app.allValidLocations.includes(cell))
+                                arrayDown = []
+                        }
+                        if ((adjacentRows - i) > -1) {
+                            let row = app.rows[adjacentRows - i];
+                            let cell = row + adjacentColumns;
+                            arrayUp.push(cell)
+
+                            if (!app.allValidLocations.includes(cell) || !row)
+                                arrayUp = []
+                        }
+                    }
+
+                    if (arrayUp.length != length - 1) {
+                        arrayUp = []
+                    }
+                    if (arrayDown.length != length - 1) {
+                        arrayDown = []
+                    }
+                    if (arrayLeft.length != length - 1) {
+                        arrayLeft = []
+                    }
+                    if (arrayRight.length != length - 1) {
+                        arrayRight = []
+                    }
+
+                    arrayUp.forEach(cell => {
+                        document.getElementById("U" + cell).classList.add("possible-cell")
                     })
-
-                } else {
+                    arrayDown.forEach(cell => {
+                        document.getElementById("U" + cell).classList.add("possible-cell")
+                    })
                     arrayRight.forEach(cell => {
                         document.getElementById("U" + cell).classList.add("possible-cell")
                     })
-                }
-
-
-                if (arrayLeft.length <= 3) {
-                    arrayLeft.forEach(cell => {
-                        document.getElementById("U" + cell).classList.add("not-possible-cell")
-                    })
-                } else {
                     arrayLeft.forEach(cell => {
                         document.getElementById("U" + cell).classList.add("possible-cell")
                     })
+
+                    let arrayOfPossibleCellClass = document.getElementsByClassName("possible-cell");
+                    
+                    let selectedArrayToPrintTheShips = [];
+                    for (var i = 0; i < arrayOfPossibleCellClass.length; i++) {
+                        let cell = arrayOfPossibleCellClass[i];
+                        cell.addEventListener("click", (ev) => {
+                            console.log(selectedArrayToPrintTheShips)
+                            console.log("this is the second click")
+                            if (arrayUp.includes(ev.target.id.split("U")[1]))
+                                selectedArrayToPrintTheShips = arrayUp;
+                            if (arrayDown.includes(ev.target.id.split("U")[1]))
+                                selectedArrayToPrintTheShips = arrayDown;
+                            if (arrayLeft.includes(ev.target.id.split("U")[1]))
+                                selectedArrayToPrintTheShips = arrayLeft;
+                            if (arrayRight.includes(ev.target.id.split("U")[1]))
+                                selectedArrayToPrintTheShips = arrayRight;
+
+
+                            for (var i = 0; i < selectedArrayToPrintTheShips.length; i++) {
+                                document.getElementById("U" + selectedArrayToPrintTheShips[i]).setAttribute("class", "userCell " + app.ship)
+                            }
+
+                            arrayUp.forEach(cell => {
+                                document.getElementById("U" + cell).classList.remove("possible-cell")
+                            })
+                            arrayDown.forEach(cell => {
+                                document.getElementById("U" + cell).classList.remove("possible-cell")
+                            })
+                            arrayRight.forEach(cell => {
+                                document.getElementById("U" + cell).classList.remove("possible-cell")
+                            })
+                            arrayLeft.forEach(cell => {
+                                document.getElementById("U" + cell).classList.remove("possible-cell")
+                            })
+
+
+                            arrayRight = [];
+                            arrayLeft = [];
+                            arrayDown = [];
+                            arrayUp = [];
+                            
+                            app.select_box = true;
+
+                            //app.allValidLocations - selectedArrayToPrintTheShips
+                        })
+                    }
+
+                    e.target.classList.add(this.ship);
+
                 }
-
-                e.target.classList.add(this.ship);
-
 
             });
         },
