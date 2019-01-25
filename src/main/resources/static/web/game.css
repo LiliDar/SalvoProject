@@ -636,7 +636,11 @@ td:active {
     background-color: #D1E3E9;
 }
 
-
+.salvo {
+    background-image: url(images/batman-pow-300x219.png);
+    background-size: 48px 50px;
+    background-color: #D1E3E9;
+}
 
 
 

@@ -123,7 +123,7 @@ public class SalvoController {
                     , HttpStatus.UNAUTHORIZED);
 
         }else if(gamePlayer.getShips().size() == 5) {
-            return new ResponseEntity<>(makeMap("error", "Ships has been placed already")
+            return new ResponseEntity<>(makeMap("error", "Ships have been placed already")
                     , HttpStatus.FORBIDDEN);
 
         } else if (ships.isEmpty()) {
@@ -140,6 +140,42 @@ public class SalvoController {
                     , HttpStatus.CREATED);
         }
     }
+
+    @RequestMapping(path="/games/players/{gamePlayerId}/salvos", method=RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> placingSalvos(@PathVariable long gamePlayerId,
+                                                             @RequestBody Salvo salvo,
+                                                             Authentication authentication){
+
+        GamePlayer gamePlayer = gamePlayerRepository.findOne(gamePlayerId);
+
+        if(authentication == null){
+            return new ResponseEntity<>(makeMap("error", "No user is logged in")
+                    , HttpStatus.UNAUTHORIZED);
+
+
+        }else if(gamePlayer == null){
+            return new ResponseEntity<>(makeMap("error", "The user does not exist")
+                    , HttpStatus.UNAUTHORIZED);
+
+
+        }else if(gamePlayer.getPlayer() != currentPlayer(authentication)) {
+            return new ResponseEntity<>(makeMap("error", "This is not your game")
+                    , HttpStatus.UNAUTHORIZED);
+
+        }else if(gamePlayer.getSalvos().size() > 5) {
+            return new ResponseEntity<>(makeMap("error", "Salvos have been placed already")
+                    , HttpStatus.FORBIDDEN);
+
+        }else{
+            salvo.setTurn(1);
+            salvo.setGamePlayer(gamePlayer);
+            salvoRepository.save(salvo);
+
+            return new ResponseEntity<>(makeMap("success", "Salvos are created")
+                        , HttpStatus.CREATED);
+            }
+}
+
 
     @RequestMapping("/gamePlayers")
     public List <GamePlayer> getAllGamePlayers() {

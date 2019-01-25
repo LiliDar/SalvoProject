@@ -14,7 +14,6 @@ var app = new Vue({
         opponentEmail: [],
         currentPlayer: [],
 
-        adjacentCells: [],
         shipLocations: [],
         secondClickId: [],
         locationsArray: [],
@@ -34,6 +33,8 @@ var app = new Vue({
         shipClicks: 0,
         shipLogo: [],
 
+        salvo: 2,
+
         userGrid: "U",
         opponentGrid: "O",
 
@@ -49,6 +50,8 @@ var app = new Vue({
         allValidLocations: [],
 
         select_box: true,
+        post_box: false,
+        opponent_table: false,
     },
 
     created: function () {
@@ -95,8 +98,9 @@ var app = new Vue({
 
                     /*app.printSalvos(app.userSalvos, app.placeOpponentSalvo);
                     app.printSalvos(app.enemySalvos, app.placeUserSalvo);*/
-                    app.printShips();
-                    app.shipLocation()
+                    //app.printShips();
+                    app.shipLocation();
+                    //app.salvoLocation();
 
                 })
 
@@ -126,7 +130,7 @@ var app = new Vue({
             this.opponentEmail = opponent;
         },
 
-        printShips() {
+        /*printShips() {
             for (var i = 0; i < app.userShips.length; i++) {
                 let shipLocations = app.userShips[i].locations;
                 let shipType = app.userShips[i].type;
@@ -139,7 +143,7 @@ var app = new Vue({
                     }
                 }
             }
-        },
+        },*/
 
         /*printSalvos(salvo, grid) {
             for (var i = 0; i < salvo.length; i++) {
@@ -174,6 +178,12 @@ var app = new Vue({
 
         placeShips() {
 
+            app.shipLocations.push({
+                type: app.ship,
+                locations: [],
+            })
+
+            app.select_box = false;
             fetch('/api/games/players/' + this.id + '/ships', {
                     credentials: 'include',
                     method: 'POST',
@@ -181,39 +191,48 @@ var app = new Vue({
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify([{
-                        type: app.ship,
-                        location: app.shipLocations
-                    }]),
+                    body: JSON.stringify(app.shipLocations),
                 })
                 .then(r => r.json().then(e => console.log(e)))
                 .catch(e => console.log(e))
+
         },
 
         shipLocation() {
 
             document.getElementById('userTable').addEventListener('click', (e) => {
-                
-               
-                
+
+                let carrier = [];
+                let battleship = [];
+                let submarine = [];
+                let destroyer = [];
+                let patrol = [];
+
                 let length = app.shipType[app.ship];
 
                 let locationCell = e.target.id;
                 let rowHeader = locationCell.charAt(1);
-                let columnHeader = locationCell.charAt(2);
-                let isFinished = false;
+                let columnHeaderUntil9 = locationCell.charAt(2);
+                let columnHeader;
+                if (locationCell.charAt(3) != null) {
+                    columnHeader = columnHeaderUntil9 + locationCell.charAt(3)
+                } else {
+                    columnHeader = columnHeaderUntil9
+                }
 
+                let isFinished = false;
                 if (!e.target.classList.contains(app.ship)) {
-                    
-                    app.select_box = false;
+
+
+                    app.post_box = false;
                     console.log("this is the first click")
 
-                    let shipLocation = "U" + rowHeader + columnHeader;
-                    app.shipLocations.push(shipLocation);
+                    let shipLocation = rowHeader + columnHeader;
 
                     let adjacentColumns = parseInt(columnHeader);
                     let adjacentRows = app.rows.indexOf(rowHeader);
 
+                    let arrayFirst = [];
                     let arrayRight = [];
                     let arrayLeft = [];
                     let arrayDown = [];
@@ -221,6 +240,7 @@ var app = new Vue({
 
 
                     for (let i = 1; i < length; i++) {
+                        
                         if ((adjacentColumns + i) < 11) {
                             let cell = rowHeader + (adjacentColumns + i);
                             arrayRight.push(cell)
@@ -248,7 +268,7 @@ var app = new Vue({
                             let cell = row + adjacentColumns;
                             arrayUp.push(cell)
 
-                            if (!app.allValidLocations.includes(cell) || !row)
+                            if (!app.allValidLocations.includes(cell))
                                 arrayUp = []
                         }
                     }
@@ -280,13 +300,14 @@ var app = new Vue({
                     })
 
                     let arrayOfPossibleCellClass = document.getElementsByClassName("possible-cell");
-                    
+
                     let selectedArrayToPrintTheShips = [];
                     for (var i = 0; i < arrayOfPossibleCellClass.length; i++) {
                         let cell = arrayOfPossibleCellClass[i];
                         cell.addEventListener("click", (ev) => {
-                            console.log(selectedArrayToPrintTheShips)
                             console.log("this is the second click")
+                            app.select_box = false;
+                            app.post_box = true;
                             if (arrayUp.includes(ev.target.id.split("U")[1]))
                                 selectedArrayToPrintTheShips = arrayUp;
                             if (arrayDown.includes(ev.target.id.split("U")[1]))
@@ -296,10 +317,16 @@ var app = new Vue({
                             if (arrayRight.includes(ev.target.id.split("U")[1]))
                                 selectedArrayToPrintTheShips = arrayRight;
 
-
-                            for (var i = 0; i < selectedArrayToPrintTheShips.length; i++) {
-                                document.getElementById("U" + selectedArrayToPrintTheShips[i]).setAttribute("class", "userCell " + app.ship)
+                            
+                            for (var j = 0; j < selectedArrayToPrintTheShips.length; j++) {
+                                document.getElementById("U" + selectedArrayToPrintTheShips[j]).setAttribute("class", "userCell " + app.ship)
+                                app.deleteElementOfAnArray(app.allValidLocations, selectedArrayToPrintTheShips[j])
                             }
+
+
+                            app.deleteElementOfAnArray(app.allValidLocations, rowHeader + columnHeader)
+
+
 
                             arrayUp.forEach(cell => {
                                 document.getElementById("U" + cell).classList.remove("possible-cell")
@@ -314,13 +341,27 @@ var app = new Vue({
                                 document.getElementById("U" + cell).classList.remove("possible-cell")
                             })
 
+                            if(e.target.classList.contains('carrier')) 
+                                carrier = rowHeader + columnHeader
+                            if (arrayUp.includes(ev.target.id.split("U")[1]))
+                                carrier = arrayUp;
+                            if (arrayDown.includes(ev.target.id.split("U")[1]))
+                                carrier = arrayDown;
+                            if (arrayLeft.includes(ev.target.id.split("U")[1]))
+                                carrier = arrayLeft;
+                            if (arrayRight.includes(ev.target.id.split("U")[1]))
+                                carrier = arrayRight;
+                            
+                            console.log(carrier)
 
+                            
                             arrayRight = [];
                             arrayLeft = [];
                             arrayDown = [];
                             arrayUp = [];
-                            
-                            app.select_box = true;
+                            selectedArrayToPrintTheShips = [];
+
+
 
                             //app.allValidLocations - selectedArrayToPrintTheShips
                         })
@@ -335,25 +376,72 @@ var app = new Vue({
 
         selectTrump() {
             this.ship = 'carrier'
+            app.select_box = false;
+            app.post_box = true;
         },
 
         selectPutin() {
             this.ship = 'battleship'
+            app.select_box = false;
+            app.post_box = true;
         },
 
         selectMerkel() {
             this.ship = 'submarine'
+            app.select_box = false;
+            app.post_box = true;
         },
 
         selectMay() {
             this.ship = 'destroyer'
+            app.select_box = false;
+            app.post_box = true;
         },
 
         selectOrban() {
             this.ship = 'patrol'
+            app.select_box = false;
+            app.post_box = true;
+        },
+
+        deleteElementOfAnArray(array, element) {
+
+            var index = array.indexOf(element)
+            array.splice(index, 1);
         },
 
 
+        /*salvoLocation() {
+
+            document.getElementById('opponentTable').addEventListener('click', (e) => {
+
+                var gameId = e.target.id.toString();
+                var rowHeader = gameId.charAt(1);
+                var columnHeader = gameId.charAt(2);
+                var salvoLocation = "O" + rowHeader + columnHeader;
+                console.log(salvoLocation)
+
+                e.target.classList.add('salvo');
+            });
+        },
+
+        placeSalvos() {
+
+
+            fetch('/api/games/players/' + this.id + '/salvos', {
+                    credentials: 'include',
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        locations: ['A1', 'A2', 'A2']
+                    }),
+                })
+                .then(r => r.json().then(location.reload()))
+                .catch(e => console.log(e))
+        },*/
 
 
     },
