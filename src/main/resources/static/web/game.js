@@ -34,6 +34,14 @@ var app = new Vue({
         shipLogo: [],
 
         salvo: 2,
+        salvoLocations: [],
+        salvoType: {
+            'shotOne': 1,
+            'shotOne': 1,
+            'shotOne': 1,
+            'shotOne': 1,
+            'shotOne': 1,
+        },
 
         userGrid: "U",
         opponentGrid: "O",
@@ -51,7 +59,8 @@ var app = new Vue({
 
         select_box: true,
         post_box: false,
-        opponent_table: false,
+        salvo_box: false,
+        opponent_table: true,
     },
 
     created: function () {
@@ -100,7 +109,7 @@ var app = new Vue({
                     app.printSalvos(app.enemySalvos, app.placeUserSalvo);*/
                     //app.printShips();
                     app.shipLocation();
-                    //app.salvoLocation();
+                    app.salvoLocation();
 
                 })
 
@@ -195,6 +204,9 @@ var app = new Vue({
 
         shipLocation() {
 
+
+            app.select_box = true;
+
             document.getElementById('userTable').addEventListener('click', (e) => {
 
 
@@ -222,7 +234,6 @@ var app = new Vue({
                     let adjacentColumns = parseInt(columnHeader);
                     let adjacentRows = app.rows.indexOf(rowHeader);
 
-                    let arrayFirst = [];
                     let arrayRight = [];
                     let arrayLeft = [];
                     let arrayDown = [];
@@ -312,7 +323,7 @@ var app = new Vue({
                                 document.getElementById("U" + selectedArrayToPrintTheShips[j]).setAttribute("class", "userCell " + app.ship)
                                 app.deleteElementOfAnArray(app.allValidLocations, selectedArrayToPrintTheShips[j])
                             }
-                        
+
                             app.deleteElementOfAnArray(app.allValidLocations, rowHeader + columnHeader)
 
                             arrayUp.forEach(cell => {
@@ -337,6 +348,10 @@ var app = new Vue({
                             if (!app.shipLocations.includes(shipToPush) && shipToPush.locations.length == length)
                                 app.shipLocations.push(shipToPush)
 
+                            console.log(app.shipLocations)
+
+
+
                             arrayRight = [];
                             arrayLeft = [];
                             arrayDown = [];
@@ -346,9 +361,11 @@ var app = new Vue({
                             if (app.ship == 'patrol') {
                                 app.post_box = true;
                                 app.select_box = false;
-                            }else {
+                                app.opponent_table = true;
+                            } else {
                                 app.post_box = false;
                                 app.select_box = true;
+                                app.opponent_table = false;
                             }
 
                         })
@@ -389,38 +406,58 @@ var app = new Vue({
         },
 
 
-        /*salvoLocation() {
+        salvoLocation() {
 
-            document.getElementById('opponentTable').addEventListener('click', (e) => {
 
-                var gameId = e.target.id.toString();
-                var rowHeader = gameId.charAt(1);
-                var columnHeader = gameId.charAt(2);
-                var salvoLocation = "O" + rowHeader + columnHeader;
-                console.log(salvoLocation)
+            document.getElementById('opponentTable').addEventListener('click', (ev) => {
 
-                e.target.classList.add('salvo');
+
+                    app.salvo_box = true;
+                    let cell = ev.target;
+                
+                
+                if(!cell.classList.contains("salvo")) {
+                    cell.classList.add('salvo')
+                } else {
+                     cell.classList.remove('salvo')
+                }
+                let array = [];
+                let otherArray = [];
+                let allSalvos = document.getElementsByClassName("salvo");  
+                for (var i = 0; i < allSalvos.length; i++) {
+                    let salvo = allSalvos[i];
+                    if(i < 5 ) {
+                       array.push(salvo.id.split("O")[1]); 
+                    } else {
+                        otherArray.push(salvo);
+                    }
+                    
+                }
+                otherArray.forEach(el => el.classList.remove("salvo"))
+                app.salvoLocations = array;
+
+          
+
             });
-        },
-
-        placeSalvos() {
-
-
-            fetch('/api/games/players/' + this.id + '/salvos', {
-                    credentials: 'include',
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        locations: ['A1', 'A2', 'A2']
-                    }),
-                })
-                .then(r => r.json().then(location.reload()))
-                .catch(e => console.log(e))
-        },*/
-
-
     },
+
+    placeSalvos() {
+
+
+        fetch('/api/games/players/' + this.id + '/salvos', {
+                credentials: 'include',
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({locations: app.salvoLocations}),
+            })
+            .then(r => r.json().then(e => console.log(e)))
+            .catch(e => console.log(e))
+    },
+
+
+
+},
 })

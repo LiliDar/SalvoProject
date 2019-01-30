@@ -71,14 +71,17 @@
                 </tr>
 
             </table>
-          
+
 
             <div>
-               <div v-if="post_box" class="box">
-                    <a class="button" href="#popup1" @click="placeShips">Post</a>
+               <div v-if="salvo_box" class="box">
+                    <a class="button" @click="placeSalvos()">Post</a>
                 </div>
-                <div v-if="select_box "class="box">
-                    <a class="button" href="#popup1">Select a Politican</a>
+                <div v-if="post_box" class="box">
+                    <a class="button" @click="placeShips()">Post</a>
+                </div>
+                <div v-if="select_box " class="box">
+                    <a class="button" href="#popup1">Select</a>
                 </div>
 
                 <div id="popup1" class="overlay">
@@ -125,16 +128,19 @@
                 </div>
             </div>
 
-            <table v-if="opponent_table" id="opponentTable">
-                <tr>
-                    <th></th>
-                    <th class="table-light" v-for="key in columns">{{key}}</th>
-                </tr>
-                <tr v-for="r in rows">
-                    <th class="table-light" scope="row">{{r}}</th>
-                    <td v-for="c in columns" class="opponentCells" :id="'O'+r+c"></td>
-                </tr>
-            </table>
+            <div>
+                
+                <table v-if="opponent_table" id="opponentTable">
+                    <tr>
+                        <th></th>
+                        <th class="table-light" v-for="key in columns">{{key}}</th>
+                    </tr>
+                    <tr v-for="r in rows">
+                        <th class="table-light" scope="row">{{r}}</th>
+                        <td v-for="c in columns" class="opponentCells" :id="'O'+r+c"></td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
 
