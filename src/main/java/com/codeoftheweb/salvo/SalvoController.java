@@ -38,7 +38,7 @@ public class SalvoController {
         Map<String, Object> map = new HashMap<>();
         if(authentication != null)
             map.put("currentPlayer", playerRepository.findByEmail(authentication.getName()));
-            map.put("games", gameRepository.findAll());
+        map.put("games", gameRepository.findAll());
         return map;
     }
 
@@ -81,7 +81,7 @@ public class SalvoController {
             playerRepository.save(newPlayer);
             return  new ResponseEntity<Map<String, Object>>(makeMap("succed", "player created"), HttpStatus.CREATED);
         }
-        }
+    }
 
     @RequestMapping(path = "/game/{gameId}/players", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> getGameJoin (@PathVariable Long gameId, Authentication authentication){
@@ -172,9 +172,9 @@ public class SalvoController {
             salvoRepository.save(salvo);
 
             return new ResponseEntity<>(makeMap("success", "Salvos are created")
-                        , HttpStatus.CREATED);
-            }
-}
+                    , HttpStatus.CREATED);
+        }
+    }
 
 
     @RequestMapping("/gamePlayers")
@@ -206,22 +206,22 @@ public class SalvoController {
         Player user = playerRepository.findByEmail(authentication.getName()).get(0);
 
         if (gamePlayer.getPlayer().getId() == user.getId()) {
-        GamePlayer enemy = getEnemyGamePlayer(gamePlayer);
+            GamePlayer enemy = getEnemyGamePlayer(gamePlayer);
 
-        dto.put("currentPlayer", playerRepository.findByEmail(authentication.getName()));
-        dto.put("game", makeGameDTO(gamePlayer.getGame()));
-        dto.put("userInfo", makeGamePlayerDTO(gamePlayer));
-        dto.put("userShips", gamePlayer.getShips()
-                .stream().map(ship -> makeShipDTO(ship))
-                .collect(toList()));
-        dto.put("userSalvos", gamePlayer.getSalvos()
-                .stream().map(salvo -> makeSalvoDTO(salvo))
-                .collect(toList()));
-        dto.put("userScore", gamePlayer.getScore());
-        dto.put("enemySalvos", enemy.getSalvos()
-                .stream()
-                .map(salvo -> makeSalvoDTO(salvo))
-                .collect(toList()));
+            dto.put("currentPlayer", playerRepository.findByEmail(authentication.getName()));
+            dto.put("game", makeGameDTO(gamePlayer.getGame()));
+            dto.put("userInfo", makeGamePlayerDTO(gamePlayer));
+            dto.put("userShips", gamePlayer.getShips()
+                    .stream().map(ship -> makeShipDTO(ship))
+                    .collect(toList()));
+            dto.put("userSalvos", gamePlayer.getSalvos()
+                    .stream().map(salvo -> makeSalvoDTO(salvo))
+                    .collect(toList()));
+            dto.put("userScore", gamePlayer.getScore());
+            dto.put("enemySalvos", enemy.getSalvos()
+                    .stream()
+                    .map(salvo -> makeSalvoDTO(salvo))
+                    .collect(toList()));
         }else{
             dto.put("error", "not your game");
         }
@@ -336,4 +336,3 @@ public class SalvoController {
 
 
 }
-

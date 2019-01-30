@@ -178,11 +178,6 @@ var app = new Vue({
 
         placeShips() {
 
-            app.shipLocations.push({
-                type: app.ship,
-                locations: [],
-            })
-
             app.select_box = false;
             fetch('/api/games/players/' + this.id + '/ships', {
                     credentials: 'include',
@@ -202,11 +197,6 @@ var app = new Vue({
 
             document.getElementById('userTable').addEventListener('click', (e) => {
 
-                let carrier = [];
-                let battleship = [];
-                let submarine = [];
-                let destroyer = [];
-                let patrol = [];
 
                 let length = app.shipType[app.ship];
 
@@ -240,7 +230,7 @@ var app = new Vue({
 
 
                     for (let i = 1; i < length; i++) {
-                        
+
                         if ((adjacentColumns + i) < 11) {
                             let cell = rowHeader + (adjacentColumns + i);
                             arrayRight.push(cell)
@@ -306,8 +296,8 @@ var app = new Vue({
                         let cell = arrayOfPossibleCellClass[i];
                         cell.addEventListener("click", (ev) => {
                             console.log("this is the second click")
-                            app.select_box = false;
-                            app.post_box = true;
+                            app.select_box = true;
+
                             if (arrayUp.includes(ev.target.id.split("U")[1]))
                                 selectedArrayToPrintTheShips = arrayUp;
                             if (arrayDown.includes(ev.target.id.split("U")[1]))
@@ -317,16 +307,13 @@ var app = new Vue({
                             if (arrayRight.includes(ev.target.id.split("U")[1]))
                                 selectedArrayToPrintTheShips = arrayRight;
 
-                            
+
                             for (var j = 0; j < selectedArrayToPrintTheShips.length; j++) {
                                 document.getElementById("U" + selectedArrayToPrintTheShips[j]).setAttribute("class", "userCell " + app.ship)
                                 app.deleteElementOfAnArray(app.allValidLocations, selectedArrayToPrintTheShips[j])
                             }
-
-
+                        
                             app.deleteElementOfAnArray(app.allValidLocations, rowHeader + columnHeader)
-
-
 
                             arrayUp.forEach(cell => {
                                 document.getElementById("U" + cell).classList.remove("possible-cell")
@@ -341,31 +328,32 @@ var app = new Vue({
                                 document.getElementById("U" + cell).classList.remove("possible-cell")
                             })
 
-                            if(e.target.classList.contains('carrier')) 
-                                carrier = rowHeader + columnHeader
-                            if (arrayUp.includes(ev.target.id.split("U")[1]))
-                                carrier = arrayUp;
-                            if (arrayDown.includes(ev.target.id.split("U")[1]))
-                                carrier = arrayDown;
-                            if (arrayLeft.includes(ev.target.id.split("U")[1]))
-                                carrier = arrayLeft;
-                            if (arrayRight.includes(ev.target.id.split("U")[1]))
-                                carrier = arrayRight;
-                            
-                            console.log(carrier)
 
-                            
+                            let shipToPush = {
+                                type: app.ship,
+                                locations: [...selectedArrayToPrintTheShips, rowHeader + columnHeader]
+                            }
+
+                            if (!app.shipLocations.includes(shipToPush) && shipToPush.locations.length == length)
+                                app.shipLocations.push(shipToPush)
+
                             arrayRight = [];
                             arrayLeft = [];
                             arrayDown = [];
                             arrayUp = [];
                             selectedArrayToPrintTheShips = [];
 
+                            if (app.ship == 'patrol') {
+                                app.post_box = true;
+                                app.select_box = false;
+                            }else {
+                                app.post_box = false;
+                                app.select_box = true;
+                            }
 
-
-                            //app.allValidLocations - selectedArrayToPrintTheShips
                         })
                     }
+
 
                     e.target.classList.add(this.ship);
 
@@ -376,32 +364,22 @@ var app = new Vue({
 
         selectTrump() {
             this.ship = 'carrier'
-            app.select_box = false;
-            app.post_box = true;
         },
 
         selectPutin() {
             this.ship = 'battleship'
-            app.select_box = false;
-            app.post_box = true;
         },
 
         selectMerkel() {
             this.ship = 'submarine'
-            app.select_box = false;
-            app.post_box = true;
         },
 
         selectMay() {
             this.ship = 'destroyer'
-            app.select_box = false;
-            app.post_box = true;
         },
 
         selectOrban() {
             this.ship = 'patrol'
-            app.select_box = false;
-            app.post_box = true;
         },
 
         deleteElementOfAnArray(array, element) {
