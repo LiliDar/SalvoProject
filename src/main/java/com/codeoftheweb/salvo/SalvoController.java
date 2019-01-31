@@ -166,14 +166,27 @@ public class SalvoController {
             return new ResponseEntity<>(makeMap("error", "Salvos have been placed already")
                     , HttpStatus.FORBIDDEN);
 
+        }else if(salvo.getTurn() <= getLastTurn(gamePlayer)) {
+            return new ResponseEntity<>(makeMap("error", "You already had your turn")
+                    , HttpStatus.FORBIDDEN);
+
         }else{
-            salvo.setTurn(1);
+            salvo.setTurn(getLastTurn(gamePlayer) + 1);
             salvo.setGamePlayer(gamePlayer);
             salvoRepository.save(salvo);
 
             return new ResponseEntity<>(makeMap("success", "Salvos are created")
                     , HttpStatus.CREATED);
         }
+    }
+
+    private int getLastTurn (GamePlayer gamePlayer) {
+        int lastTurn = 0;
+        for (Salvo salvo : gamePlayer.getSalvos()) {
+            if (lastTurn < salvo.getTurn())
+                lastTurn = salvo.getTurn();
+        }
+        return lastTurn;
     }
 
 
@@ -205,8 +218,10 @@ public class SalvoController {
         GamePlayer gamePlayer = gamePlayerRepository.findOne(id);
         Player user = playerRepository.findByEmail(authentication.getName()).get(0);
 
-        if (gamePlayer.getPlayer().getId() == user.getId()) {
-            GamePlayer enemy = getEnemyGamePlayer(gamePlayer);
+        if (gamePlayer.getPlayer().getId() != user.getId()) {
+            dto.put("error", "not your game");
+        }else{
+            GamePlayer opponent = opponentPlayer(gamePlayer);
 
             dto.put("currentPlayer", playerRepository.findByEmail(authentication.getName()));
             dto.put("game", makeGameDTO(gamePlayer.getGame()));
@@ -218,15 +233,22 @@ public class SalvoController {
                     .stream().map(salvo -> makeSalvoDTO(salvo))
                     .collect(toList()));
             dto.put("userScore", gamePlayer.getScore());
-            dto.put("enemySalvos", enemy.getSalvos()
-                    .stream()
-                    .map(salvo -> makeSalvoDTO(salvo))
-                    .collect(toList()));
-        }else{
-            dto.put("error", "not your game");
+
+
+            if(opponent != null) {
+                Map<String, Integer> userFleet = allShipsFleet();
+                Map<String, Integer> opponentFleet = allShipsFleet();
+                dto.put("hits", allHits(gamePlayer, userFleet, opponentFleet));
+                dto.put("opponentFleet", opponentFleet);
+                dto.put("enemySalvos", opponent.getSalvos()
+                        .stream()
+                        .map(salvo -> makeSalvoDTO(salvo))
+                        .collect(toList()));
+            }
         }
         return dto;
     }
+
 
     @RequestMapping(value = "/leader-board")
     public List<Object> getAllLeads() {
@@ -314,7 +336,7 @@ public class SalvoController {
         return dto;
     }
 
-    private GamePlayer getEnemyGamePlayer(GamePlayer gamePlayer) {
+    private GamePlayer opponentPlayer(GamePlayer gamePlayer) {
         return gamePlayer.getGame().getGamePlayers()
                 .stream()
                 .filter(gp -> gp.getId() != gamePlayer.getId())
@@ -333,6 +355,86 @@ public class SalvoController {
         return playerRepository.findByEmail(authentication.getName()).get(0);
     }
 
+
+    private Map<String, Integer> allShipsFleet(){
+        Map<String, Integer> fleet = new HashMap<String, Integer>();
+        fleet.put("patrol", 2);
+        fleet.put("destroyer", 3);
+        fleet.put("submarine", 3);
+        fleet.put("battleship", 4);
+        fleet.put("carrier", 5);
+
+        fleet.put("Total", 5);
+
+        return fleet;
+    }
+
+    private Map<String, Object> salvosOnShips (Set<Ship> ships, Salvo salvo, Map<String, Integer> fleet){
+        Map<String, Object> dto = new HashMap<String, Object>();
+
+        List<Object> shipsSalvo = ships.stream()
+                .filter(ship -> fleet.get(ship.getType()) != 0)
+                .map(ship -> ShipSalvoLocations(ship, salvo, fleet))
+                .filter(shipAcrossSalvo -> !shipAcrossSalvo.isEmpty())
+                .collect(toList());
+
+        if(!shipsSalvo.isEmpty()){
+            dto.put("turn", salvo.getTurn());
+            dto.put("hit", shipsSalvo);
+
+        }else{
+            dto.put("hit", null);
+        }
+
+        return dto;
+    }
+
+    private Map<String, Object> allHits (GamePlayer gamePlayer, Map<String, Integer> userFleet, Map<String, Integer> opponentFleet){
+        Map<String, Object> dto = new HashMap<String, Object>();
+
+
+        Set<Ship> userShip = gamePlayer.getShips();
+        Set<Salvo> opponentsSalvo = opponentPlayer(gamePlayer).getSalvos();
+
+        Set<Salvo> userSalvo = gamePlayer.getSalvos();
+        Set<Ship> opponentShip = opponentPlayer(gamePlayer).getShips();
+
+
+        dto.put("userHits", userSalvo.stream()
+                .sorted((s1, s2) -> s1.getTurn() - s2.getTurn())
+                .map(salvo -> salvosOnShips(opponentShip, salvo, opponentFleet))
+                .collect(toList()));
+
+        dto.put("receivedHits", opponentsSalvo.stream()
+                .sorted((s1, s2) -> s1.getTurn() - s2.getTurn())
+                .map(salvo -> salvosOnShips(userShip, salvo, userFleet))
+                .collect(toList()));
+
+        return dto;
+    }
+
+    private Map<String, Object> ShipSalvoLocations (Ship ship, Salvo salvo, Map<String, Integer> fleet){
+        Map<String, Object> dto = new HashMap<String, Object>();
+
+        List<String> salvoLocation = salvo.getLocations();
+
+        List<String> shipLocation = ship.getLocations();
+        List<String> shipsHit = shipLocation.stream()
+                .filter(locations -> salvoLocation.contains(locations))
+                .collect(toList());
+
+        if(shipsHit.size() != 0){
+            dto.put("type", ship.getType());
+            dto.put("location", shipsHit);
+
+            fleet.put(ship.getType(), fleet.get(ship.getType()) - shipsHit.size());
+
+            if(fleet.get(ship.getType()) == 0){
+                fleet.put("fleets", fleet.get("fleets") - 1);
+            }
+        }
+        return dto;
+    }
 
 
 }

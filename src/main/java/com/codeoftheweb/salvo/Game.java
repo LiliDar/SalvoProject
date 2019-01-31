@@ -20,7 +20,7 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    private Date creationDate;
+    private Date creationDate = new Date();
 
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
@@ -38,10 +38,12 @@ public class Game {
         scores.add(score);
     }
 
-    public Game() {}
+    public Game()  {
+        this.creationDate = new Date();
+    }
 
     public Game(Date creationDate) {
-        this.creationDate = new Date();
+        this.creationDate = creationDate;
     }
 
     public long getId() {
