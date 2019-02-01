@@ -31,6 +31,11 @@ public class SalvoController {
     @Autowired
     private ScoreRepository scoreRepository;
 
+    /*@RequestMapping("/bla")
+    private List<Object> ha () {
+        return playerRepository.findAll().stream().map(player -> makePlayerDTO(player)).collect(toList());
+    }*/
+
 
     @RequestMapping("/games")
     public Map<String, Object> getAll(Authentication authentication) {

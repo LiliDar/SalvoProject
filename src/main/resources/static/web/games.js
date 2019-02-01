@@ -126,13 +126,11 @@ var app = new Vue({
                     },
                     body: 'email=' + username.value + '&password=' + password.value,
                 })
-                .then(r => r.json().then(e => console.log(e)))
-
-            location.reload();
-            app.isLogged = true;
-            /*app.appear = false;
-            app.show = true;*/
-            app.path = 1;
+                .then(r => r.json())
+                .then(e => {
+                console.log(e)
+                app.logIn();
+            })
         },
 
         findGames() {
@@ -205,9 +203,9 @@ var app = new Vue({
                 .catch(e => console.log(e))
         },
 
-       
-        
-        
+
+
+
 
         modal() {
             var openLoginRight = document.querySelector('.h1');
@@ -260,6 +258,6 @@ var app = new Vue({
                 slider.css("border-top-width", "5px");
             });
         },
-        
+
     }
 })

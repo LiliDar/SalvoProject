@@ -354,6 +354,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/web/games.html").permitAll()
+                //.antMatchers("/api/bla").permitAll()
                 .antMatchers("/web/game.css").permitAll()
                 .antMatchers("/web/games.js").permitAll()
                 .antMatchers("/web/images/**").permitAll()
